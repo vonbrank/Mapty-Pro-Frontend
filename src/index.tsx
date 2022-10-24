@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./scss/main.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { RouterProvider } from "react-router-dom";
+import customRouter from "./Route";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./Theme";
 
@@ -12,7 +14,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <App />
+            <RouterProvider router={customRouter} />
         </ThemeProvider>
     </React.StrictMode>
 );
