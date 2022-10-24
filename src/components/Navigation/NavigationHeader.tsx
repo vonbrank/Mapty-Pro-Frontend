@@ -12,7 +12,7 @@ function a11yProps(index: number) {
   };
 }
 
-const NavigationBar = () => {
+const NavigationHeader = () => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -82,4 +82,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default NavigationHeader;

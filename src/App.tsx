@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React from "react";
+import logo from "./logo.svg";
+import NavigationHeader from "./components/Navigation/NavigationHeader";
+import NavigationFooter from "./components/Navigation/NavigationFooter";
+import { Outlet } from "react-router-dom";
+import { Stack, Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Stack sx={{ minHeight: "100vh" }} justifyContent="space-between">
+      <NavigationHeader />
+      <Box
+        sx={{
+          flexGrow: 1,
+          backgroundColor: grey[50],
+        }}
+      >
+        <Outlet />
+      </Box>
+      <NavigationFooter />
+    </Stack>
   );
 }
 
