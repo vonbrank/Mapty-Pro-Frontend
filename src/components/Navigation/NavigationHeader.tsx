@@ -81,7 +81,11 @@ const NavigationHeader = () => {
               }}
             >
               {linkInfoList.map((linkInfo, index) => (
-                <Tab label={linkInfo.label} {...a11yProps(index)} />
+                <Tab
+                  label={linkInfo.label}
+                  key={linkInfo.label}
+                  {...a11yProps(index)}
+                />
               ))}
             </Tabs>
           </Stack>

@@ -21,6 +21,7 @@ const NavigationFooter = () => {
               onClick={() => {
                 dispatch(navigateTo({ index: index }));
               }}
+              key={linkInfo.label}
             >
               {linkInfo.label}
             </CustomFooterLink>
