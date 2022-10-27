@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Box, Button, Container, Stack, Typography, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  Paper,
+} from "@mui/material";
 import MaptyIcon from "../../assets/mapty-icon.png";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { MaptyProButton } from "../CommonButton";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { navigateTo } from "../../Redux/NavigationSlice";
 
 function a11yProps(index: number) {
   return {
@@ -13,10 +22,14 @@ function a11yProps(index: number) {
 }
 
 const NavigationHeader = () => {
-  const [value, setValue] = useState(0);
+  const dispatch = useAppDispatch();
+  const { linkInfoList, activeIndex } = useAppSelector((state) => ({
+    linkInfoList: state.navigation.linkInfoList,
+    activeIndex: state.navigation.activeIndex,
+  }));
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    dispatch(navigateTo({ index: newValue }));
   };
 
   return (
@@ -56,7 +69,7 @@ const NavigationHeader = () => {
           </Stack>
           <Stack direction="row">
             <Tabs
-              value={value}
+              value={activeIndex}
               onChange={handleChange}
               aria-label="basic tabs example"
               sx={{
@@ -67,9 +80,9 @@ const NavigationHeader = () => {
                 },
               }}
             >
-              <Tab label="Home" {...a11yProps(0)} />
-              <Tab label="Discovery" {...a11yProps(1)} />
-              <Tab label="About" {...a11yProps(2)} />
+              {linkInfoList.map((linkInfo, index) => (
+                <Tab label={linkInfo.label} {...a11yProps(index)} />
+              ))}
             </Tabs>
           </Stack>
           <Stack direction="row" spacing={2}>

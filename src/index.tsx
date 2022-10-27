@@ -6,16 +6,20 @@ import { RouterProvider } from "react-router-dom";
 import customRouter from "./Route";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./Theme";
+import { Provider } from "react-redux";
+import store from "./Redux/store";
 
 const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
-    <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <RouterProvider router={customRouter} />
-        </ThemeProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={customRouter} />
+      </ThemeProvider>
+    </Provider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -2,18 +2,24 @@ import { Container, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../Redux/hooks";
 import { CustomFooterLink } from "./CustomComponents/CustomLink";
 
 const NavigationFooter = () => {
+  const linkInfoList = useAppSelector((state) => state.navigation.linkInfoList);
+
   return (
     <Paper sx={{ paddingY: "1.2rem" }}>
       <Container>
         <Stack direction="row" justifyContent="center">
-          <CustomFooterLink to="./" className="active">
-            Home
-          </CustomFooterLink>
-          <CustomFooterLink to="./">Discovery</CustomFooterLink>
-          <CustomFooterLink to="./">About</CustomFooterLink>
+          {linkInfoList.map((linkInfo) => (
+            <CustomFooterLink
+              to={linkInfo.path}
+              className={`${linkInfo.active ? "active" : ""}`}
+            >
+              {linkInfo.label}
+            </CustomFooterLink>
+          ))}
         </Stack>
         <Stack
           alignItems="center"
