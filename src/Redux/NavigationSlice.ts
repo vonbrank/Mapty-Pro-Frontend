@@ -22,12 +22,17 @@ const initialState: NavigationState = {
       active: false,
     },
     {
+      label: "Profile",
+      path: "./profile",
+      active: false,
+    },
+    {
       label: "About",
       path: "./",
       active: false,
     },
   ],
-  activeIndex: 1,
+  activeIndex: 0,
 };
 
 export const navigationSlice = createSlice({

@@ -13,6 +13,7 @@ import Tab from "@mui/material/Tab";
 import { MaptyProButton } from "../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo } from "../../Redux/NavigationSlice";
+import { useNavigate } from "react-router-dom";
 
 function a11yProps(index: number) {
   return {
@@ -27,6 +28,8 @@ const NavigationHeader = () => {
     linkInfoList: state.navigation.linkInfoList,
     activeIndex: state.navigation.activeIndex,
   }));
+
+  const navigate = useNavigate();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     dispatch(navigateTo({ index: newValue }));
@@ -85,6 +88,9 @@ const NavigationHeader = () => {
                   label={linkInfo.label}
                   key={linkInfo.label}
                   {...a11yProps(index)}
+                  onClick={(e) => {
+                    navigate(linkInfo.path);
+                  }}
                 />
               ))}
             </Tabs>
