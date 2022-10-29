@@ -11,7 +11,7 @@ const NavigationFooter = () => {
   const linkInfoList = useAppSelector((state) => state.navigation.linkInfoList);
 
   return (
-    <Paper sx={{ paddingY: "1.2rem" }}>
+    <Paper elevation={2} sx={{ paddingY: "1.2rem", zIndex: 1300 }}>
       <Container>
         <Stack direction="row" justifyContent="center">
           {linkInfoList.map((linkInfo, index) => (

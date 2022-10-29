@@ -43,6 +43,7 @@ const JourneyRecommendationList: JourneyBriefInfo[] = [
 const RecommendationCard = ({ title, content, imgSrc }: JourneyBriefInfo) => {
   return (
     <Paper
+      elevation={2}
       sx={{
         padding: "1.6rem",
         "&:hover": {

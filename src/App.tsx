@@ -13,7 +13,7 @@ function App() {
       <Box
         sx={{
           flexGrow: 1,
-          backgroundColor: grey[50],
+          // backgroundColor: grey[50],
         }}
       >
         <Outlet />

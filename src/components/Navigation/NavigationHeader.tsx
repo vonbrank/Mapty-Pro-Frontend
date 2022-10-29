@@ -33,7 +33,7 @@ const NavigationHeader = () => {
   };
 
   return (
-    <Paper>
+    <Paper sx={{ zIndex: 1300 }}>
       <Container>
         <Stack
           direction="row"
