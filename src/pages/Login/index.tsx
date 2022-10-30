@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import MaptyIcon from "../../assets/mapty-icon.png";
+import { LoginForm } from "./CustomComponents/CustomForm";
 
 const Login = () => {
   const [value, setValue] = useState(0);
@@ -43,8 +44,10 @@ const Login = () => {
           },
           "&__form-container": {
             minHeight: "100vh",
-            paddingTop: "12.8rem",
-            paddingLeft: "12.8rem",
+            paddingY: "12.8rem",
+            // paddingLeft: "12.8rem",
+            paddingX: "12.8rem",
+            width: "60vw",
             transform: "translateX(40vw)",
             backgroundColor: "#fff",
             borderRadius: "2.4rem 0 0 2.4rem",
@@ -117,6 +120,7 @@ const Login = () => {
               {...loginTabProps(1)}
             />
           </Tabs>
+          <LoginForm />
         </Box>
       </Stack>
       <IconButton
