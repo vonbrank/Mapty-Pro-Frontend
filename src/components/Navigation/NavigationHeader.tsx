@@ -15,13 +15,6 @@ import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo } from "../../Redux/NavigationSlice";
 import { useNavigate } from "react-router-dom";
 
-function a11yProps(index: number) {
-  return {
-    id: `navigation-tab-${index}`,
-    "aria-controls": `navigation-tabpanel-${index}`,
-  };
-}
-
 const NavigationHeader = () => {
   const dispatch = useAppDispatch();
   const { linkInfoList, activeIndex } = useAppSelector((state) => ({
@@ -33,6 +26,13 @@ const NavigationHeader = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     dispatch(navigateTo({ index: newValue }));
+  };
+
+  const navigationTabProps = (index: number) => {
+    return {
+      id: `navigation-tab-${index}`,
+      "aria-controls": `navigation-tabpanel-${index}`,
+    };
   };
 
   return (
@@ -74,7 +74,7 @@ const NavigationHeader = () => {
             <Tabs
               value={activeIndex}
               onChange={handleChange}
-              aria-label="basic tabs example"
+              aria-label="Mapty-Pro-Navigation"
               sx={{
                 "& .MuiTab-root": {
                   fontSize: "1.8rem",
@@ -87,7 +87,7 @@ const NavigationHeader = () => {
                 <Tab
                   label={linkInfo.label}
                   key={linkInfo.label}
-                  {...a11yProps(index)}
+                  {...navigationTabProps(index)}
                   onClick={(e) => {
                     navigate(linkInfo.path);
                   }}
@@ -96,7 +96,12 @@ const NavigationHeader = () => {
             </Tabs>
           </Stack>
           <Stack direction="row" spacing={2}>
-            <MaptyProButton variant="outlined">Login</MaptyProButton>
+            <MaptyProButton
+              onClick={() => navigate("./login")}
+              variant="outlined"
+            >
+              Login
+            </MaptyProButton>
             <MaptyProButton variant="contained">Sign up</MaptyProButton>
           </Stack>
         </Stack>
