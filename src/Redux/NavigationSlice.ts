@@ -44,6 +44,7 @@ export const navigationSlice = createSlice({
         if (index === action.payload.index) {
           item.active = true;
           state.activeIndex = index;
+          window.scrollTo(0, 0);
         } else item.active = false;
         return item;
       });
