@@ -53,7 +53,7 @@ const HeroSection = () => {
           <Typography className="Home-Page__Heading-Primary--main">
             Recording your trails in your journey
           </Typography>
-          <Typography className="Home-Page__Heading-Primary--sub">
+          <Typography component={'div'} className="Home-Page__Heading-Primary--sub">
             <p>From prestine water, to majectic forest -- </p>
             <p>we've got it all</p>
           </Typography>

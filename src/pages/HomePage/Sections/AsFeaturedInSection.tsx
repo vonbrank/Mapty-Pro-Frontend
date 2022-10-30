@@ -64,14 +64,15 @@ const AsFeaturedInSection = () => {
           AS FEATURED IN
         </Typography>
         <Stack spacing="5.6rem">
-          {logoList.map((currentRow) => (
+          {logoList.map((currentRow, index) => (
             <Stack
               direction="row"
               justifyContent="center"
               alignItems="center"
               spacing="5.6rem"
+              key={index}
             >
-              {currentRow.map((currentItem) => (
+              {currentRow.map((currentItem, index) => (
                 <img
                   className={`As-Feature-In-Section__logo ${
                     currentItem.label === "Pixso" ||
@@ -81,6 +82,7 @@ const AsFeaturedInSection = () => {
                   }`}
                   src={currentItem.url}
                   alt={currentItem.label}
+                  key={index}
                 />
               ))}
             </Stack>
