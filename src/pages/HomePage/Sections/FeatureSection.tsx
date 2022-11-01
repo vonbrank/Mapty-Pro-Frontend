@@ -1,6 +1,7 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
+import { MapExample } from "../../../components/LeafletMap";
 
 interface FeatureContent {
   title: string;
@@ -85,6 +86,15 @@ const FeatureSection = () => {
             objectFit: "cover",
             opacity: 0.8,
           },
+          "&__background-map": {
+            zIndex: -1,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            opacity: 0.8,
+          },
           "&__feature-container": {
             maxWidth: "100vw",
             display: "flex",
@@ -132,11 +142,14 @@ const FeatureSection = () => {
           </Stack>
         </Box>
       </Container>
-      <img
+      <Box className="Home-Page-Feature-Section__background-map">
+        <MapExample sx={{ width: "100%", height: "100%" }} />
+      </Box>
+      {/* <img
         className="Home-Page-Feature-Section__background-image"
         src="https://vonbrank-images.oss-cn-hangzhou.aliyuncs.com/20221024-HIT-Service-Software-Engineering/leaflet-demo.webp"
         alt="leaflet demo"
-      />
+      /> */}
     </Box>
   );
 };

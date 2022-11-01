@@ -4,6 +4,7 @@ import HeroSection from "./Sections/HeroSection";
 import AsFeaturedInSection from "./Sections/AsFeaturedInSection";
 import FeatureSection from "./Sections/FeatureSection";
 import RecommendationSection from "./Sections/RecommandationSection";
+import { MapExample } from "../../components/LeafletMap";
 
 const HomePage = () => {
   return (
