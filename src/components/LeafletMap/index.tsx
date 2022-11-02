@@ -17,6 +17,7 @@ import {
   LeafletMouseEvent,
   LayerEvent,
 } from "leaflet";
+// import { tileLayer } from "leaflet.chinatmsproviders";
 
 function MapExampleOperationHook() {
   const map = useMap();
@@ -49,7 +50,7 @@ const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
         <MapExampleOperationHook />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}"
         />
         <Marker position={[45.743337, 126.631191]}>
           <Popup>
@@ -65,6 +66,9 @@ const MapDiscoveryOperationHook = () => {
   const map = useMap();
   useEffect(() => {
     map.scrollWheelZoom.enable();
+    // tileLayer
+    //   .chinaProvider("TianDiTu.Normal.Map", { maxZoom: 18, minZoom: 5 })
+    //   .addTo(map);
   }, []);
   return <></>;
 };
@@ -106,7 +110,7 @@ const MapDiscovery = () => {
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}"
         />
         <MapDiscoveryOperationHook />
         <LocationMarker handleClickMap={handleClickMap} />

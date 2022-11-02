@@ -13,22 +13,22 @@ const initialState: NavigationState = {
   linkInfoList: [
     {
       label: "Home",
-      path: "./",
+      path: "/",
       active: true,
     },
     {
       label: "Discovery",
-      path: "./discovery",
+      path: "/discovery",
       active: false,
     },
     {
       label: "Profile",
-      path: "./profile",
+      path: "/profile",
       active: false,
     },
     {
       label: "About",
-      path: "./about",
+      path: "/about",
       active: false,
     },
   ],

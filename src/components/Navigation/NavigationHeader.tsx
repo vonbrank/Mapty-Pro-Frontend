@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import Tab from "@mui/material/Tab";
 import { MaptyProButton } from "../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo } from "../../Redux/NavigationSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 
 const NavigationHeader = () => {
   const dispatch = useAppDispatch();
@@ -24,16 +24,26 @@ const NavigationHeader = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    dispatch(navigateTo({ index: newValue }));
-  };
-
   const navigationTabProps = (index: number) => {
     return {
       id: `navigation-tab-${index}`,
       "aria-controls": `navigation-tabpanel-${index}`,
     };
   };
+
+  const location = useLocation();
+
+  console.log("[Navigation] hash", location.hash);
+  console.log("[Navigation] pathname", location.pathname);
+  console.log("[Navigation] search", location.search);
+
+  useEffect(() => {
+    linkInfoList.forEach((linkInfo, index) => {
+      if (location.pathname.startsWith(linkInfo.path)) {
+        dispatch(navigateTo({ index: index }));
+      }
+    });
+  }, [location]);
 
   return (
     <Paper sx={{ zIndex: 1300 }}>
@@ -73,7 +83,6 @@ const NavigationHeader = () => {
           <Stack direction="row">
             <Tabs
               value={activeIndex}
-              onChange={handleChange}
               aria-label="Mapty-Pro-Navigation"
               sx={{
                 "& .MuiTab-root": {
