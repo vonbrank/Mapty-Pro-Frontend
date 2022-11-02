@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -6,10 +6,17 @@ import {
   Marker,
   Popup,
   LayersControl,
+  useMapEvent,
 } from "react-leaflet";
 import { Box } from "@mui/material";
 import { SxProps, Theme } from "@mui/system";
 import { useEffect } from "react";
+import {
+  LatLng,
+  LayerEventHandlerFn,
+  LeafletMouseEvent,
+  LayerEvent,
+} from "leaflet";
 
 function MapExampleOperationHook() {
   const map = useMap();
@@ -54,15 +61,32 @@ const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
   );
 };
 
-function MapDiscoveryOperationHook() {
+const MapDiscoveryOperationHook = () => {
   const map = useMap();
   useEffect(() => {
     map.scrollWheelZoom.enable();
   }, []);
   return <></>;
-}
+};
+
+const LocationMarker = ({
+  handleClickMap,
+}: {
+  handleClickMap: (e: LeafletMouseEvent) => void;
+}) => {
+  useMapEvent<"click">("click", handleClickMap);
+
+  return <></>;
+};
 
 const MapDiscovery = () => {
+  const [marksPosition, setMarksPosition] = useState<LatLng[]>([]);
+
+  const handleClickMap = (e: LeafletMouseEvent) => {
+    console.log(`[location marker] event latlng = `, e.latlng);
+    setMarksPosition([e.latlng, ...marksPosition]);
+  };
+
   return (
     <Box
       height="calc(100vh - 8rem)"
@@ -80,16 +104,19 @@ const MapDiscovery = () => {
         zoom={13}
         scrollWheelZoom={false}
       >
-        <MapDiscoveryOperationHook />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[45.743337, 126.631191]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        <MapDiscoveryOperationHook />
+        <LocationMarker handleClickMap={handleClickMap} />
+        {marksPosition.map((makPosition, index) => (
+          <Marker position={[makPosition.lat, makPosition.lng]} key={index}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </Box>
   );
