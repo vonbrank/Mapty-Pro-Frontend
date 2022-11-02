@@ -18,7 +18,7 @@ const initialState: NavigationState = {
     },
     {
       label: "Discovery",
-      path: "./",
+      path: "./discovery",
       active: false,
     },
     {
@@ -28,7 +28,7 @@ const initialState: NavigationState = {
     },
     {
       label: "About",
-      path: "./",
+      path: "./about",
       active: false,
     },
   ],
