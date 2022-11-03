@@ -12,7 +12,7 @@ function App() {
     <>
       <Login />
       <Stack
-        sx={{ minHeight: "100vh", zIndex: 0, overflow: "overlay", top: 0 }}
+        sx={{ height: "100vh", zIndex: 0, overflow: "overlay", top: 0 }}
         justifyContent="space-between"
       >
         <NavigationHeader />

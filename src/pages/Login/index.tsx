@@ -44,6 +44,8 @@ const Login = () => {
         position: "fixed",
         zIndex: 1500,
         width: "100%",
+        height: "100vh",
+        overflowY: "overlay",
         transition: "all 0.5s",
         transform: `translateX(${loginPageOpen ? 0 : "100vw"})`,
       }}
@@ -51,8 +53,6 @@ const Login = () => {
       <Box
         sx={{
           position: "relative",
-          overflow: "hidden",
-
           "& .Login-Page": {
             "&__tab": {
               fontSize: "2.4rem",
