@@ -43,8 +43,8 @@ const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
       }}
     >
       <MapContainer
-        center={[45.743641, 126.664855]}
-        zoom={13}
+        center={[45.743641, 126.644855]}
+        zoom={14}
         scrollWheelZoom={false}
       >
         <MapExampleOperationHook />
@@ -52,7 +52,7 @@ const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}"
         />
-        <Marker position={[45.743337, 126.631191]}>
+        <Marker position={[45.744337, 126.632191]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
