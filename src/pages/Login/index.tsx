@@ -12,15 +12,11 @@ import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import MaptyIcon from "../../assets/mapty-icon.png";
-import { LoginForm } from "./CustomComponents/CustomForm";
+import { CreateAccountForm, LoginForm } from "./CustomComponents/CustomForm";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
 
 const Login = () => {
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
   const loginTabProps = (index: number) => {
     return {
       id: `login-tab-${index}`,
@@ -29,106 +25,127 @@ const Login = () => {
   };
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { loginPageOpen, loginPageMode } = useAppSelector((state) => ({
+    loginPageOpen: state.login.loginPageOpen,
+    loginPageMode: state.login.mode,
+  }));
+
+  const handleLoginPageClose = () => {
+    dispatch(openLoginPage(false));
+  };
+
+  const tabsContent = [<LoginForm />, <CreateAccountForm />];
 
   return (
     <Box
       sx={{
-        position: "relative",
-        overflow: "hidden",
-        "& .Login-Page": {
-          "&__tab": {
-            fontSize: "2.4rem",
-            fontWeight: 600,
-            color: "#000",
-            textTransform: "capitalize",
-          },
-          "&__form-container": {
-            minHeight: "100vh",
-            paddingY: "12.8rem",
-            // paddingLeft: "12.8rem",
-            paddingX: "12.8rem",
-            width: "60vw",
-            transform: "translateX(40vw)",
-            backgroundColor: "#fff",
-            borderRadius: "2.4rem 0 0 2.4rem",
-            boxShadow: "-4px 0px 4px rgba(0, 0, 0, 0.25)",
-          },
-          "&__form-box": {
-            width: "72rem",
-          },
-          "&__close-button": {
-            position: "absolute",
-            top: "2.4rem",
-            right: "2.4rem",
-          },
-          "&__background-image": {
-            zIndex: -1,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            width: "45vw",
-            objectFit: "cover",
-            background:
-              "linear-gradient(to top, rgba(175, 216, 218, 0.2), rgba(175, 216, 218, 0.2)), url(https://vonbrank-images.oss-cn-hangzhou.aliyuncs.com/20221024-HIT-Service-Software-Engineering/login-unsplash.webp) no-repeat center",
-            backgroundSize: "cover",
-          },
-          "&__logo": {
-            transform: "translate(-2.5vw)",
-            "&-icon": {
-              height: "9.6rem",
-              width: "9.6rem",
-            },
-            "&-text": {
-              fontSize: "6.4rem",
-              color: "#fff",
-              fontWeight: 600,
-            },
-          },
-        },
+        position: "fixed",
+        zIndex: 1500,
+        width: "100%",
+        transition: "all 0.5s",
+        transform: `translateX(${loginPageOpen ? 0 : "100vw"})`,
       }}
     >
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        className="Login-Page__background-image"
+      <Box
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+
+          "& .Login-Page": {
+            "&__tab": {
+              fontSize: "2.4rem",
+              fontWeight: 600,
+              color: "#000",
+              textTransform: "capitalize",
+            },
+            "&__form-container": {
+              minHeight: "100vh",
+              paddingY: "12.8rem",
+              // paddingLeft: "12.8rem",
+              paddingX: "12.8rem",
+              width: "60vw",
+              transform: "translateX(40vw)",
+              backgroundColor: "#fff",
+              borderRadius: "2.4rem 0 0 2.4rem",
+              boxShadow: "-4px 0px 4px rgba(0, 0, 0, 0.25)",
+            },
+            "&__form-box": {
+              width: "72rem",
+            },
+            "&__close-button": {
+              position: "absolute",
+              top: "2.4rem",
+              right: "2.4rem",
+            },
+            "&__background-image": {
+              zIndex: -1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              height: "100%",
+              width: "45vw",
+              objectFit: "cover",
+              background:
+                "linear-gradient(to top, rgba(175, 216, 218, 0.2), rgba(175, 216, 218, 0.2)), url(https://vonbrank-images.oss-cn-hangzhou.aliyuncs.com/20221024-HIT-Service-Software-Engineering/login-unsplash.webp) no-repeat center",
+              backgroundSize: "cover",
+            },
+            "&__logo": {
+              transform: "translate(-2.5vw)",
+              "&-icon": {
+                height: "9.6rem",
+                width: "9.6rem",
+              },
+              "&-text": {
+                fontSize: "6.4rem",
+                color: "#fff",
+                fontWeight: 600,
+              },
+            },
+          },
+        }}
       >
-        <Stack className="Login-Page__logo" alignItems="center">
-          <img
-            className="Login-Page__logo-icon"
-            src={MaptyIcon}
-            alt="mapty-icon"
-          />
-          <Typography className="Login-Page__logo-text">Mapty Pro</Typography>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          className="Login-Page__background-image"
+        >
+          <Stack className="Login-Page__logo" alignItems="center">
+            <img
+              className="Login-Page__logo-icon"
+              src={MaptyIcon}
+              alt="mapty-icon"
+            />
+            <Typography className="Login-Page__logo-text">Mapty Pro</Typography>
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack className="Login-Page__form-container" direction="row">
-        <Box className="Login-Page__form-box">
-          <Tabs
-            className="Login-Page__tabs"
-            value={value}
-            onChange={handleChange}
-          >
-            <Tab
-              className="Login-Page__tab"
-              label="Login"
-              {...loginTabProps(0)}
-            />
-            <Tab
-              className="Login-Page__tab"
-              label="Create Account"
-              {...loginTabProps(1)}
-            />
-          </Tabs>
-          <LoginForm />
-        </Box>
-      </Stack>
-      <IconButton
-        className="Login-Page__close-button"
-        onClick={() => navigate("../")}
-      >
-        <CloseIcon />
-      </IconButton>
+        <Stack className="Login-Page__form-container" direction="row">
+          <Box className="Login-Page__form-box">
+            <Tabs className="Login-Page__tabs" value={loginPageMode.index}>
+              <Tab
+                className="Login-Page__tab"
+                label="Login"
+                {...loginTabProps(0)}
+                onClick={() => dispatch(switchMode(0))}
+              />
+              <Tab
+                className="Login-Page__tab"
+                label="Create Account"
+                {...loginTabProps(1)}
+                onClick={() => dispatch(switchMode(1))}
+              />
+            </Tabs>
+            {tabsContent[loginPageMode.index]}
+          </Box>
+        </Stack>
+        <IconButton
+          className="Login-Page__close-button"
+          onClick={handleLoginPageClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
     </Box>
   );
 };

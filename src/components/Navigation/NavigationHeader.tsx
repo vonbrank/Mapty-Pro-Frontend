@@ -14,13 +14,17 @@ import { MaptyProButton } from "../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo } from "../../Redux/NavigationSlice";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
+import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
 
 const NavigationHeader = () => {
   const dispatch = useAppDispatch();
-  const { linkInfoList, activeIndex } = useAppSelector((state) => ({
-    linkInfoList: state.navigation.linkInfoList,
-    activeIndex: state.navigation.activeIndex,
-  }));
+  const { linkInfoList, activeIndex, loginPageOpen } = useAppSelector(
+    (state) => ({
+      linkInfoList: state.navigation.linkInfoList,
+      activeIndex: state.navigation.activeIndex,
+      loginPageOpen: state.login.loginPageOpen,
+    })
+  );
 
   const navigate = useNavigate();
 
@@ -32,10 +36,6 @@ const NavigationHeader = () => {
   };
 
   const location = useLocation();
-
-  console.log("[Navigation] hash", location.hash);
-  console.log("[Navigation] pathname", location.pathname);
-  console.log("[Navigation] search", location.search);
 
   useEffect(() => {
     linkInfoList.forEach((linkInfo, index) => {
@@ -106,12 +106,23 @@ const NavigationHeader = () => {
           </Stack>
           <Stack direction="row" spacing={2}>
             <MaptyProButton
-              onClick={() => navigate("./login")}
+              onClick={() => {
+                dispatch(openLoginPage(true));
+                dispatch(switchMode(0));
+              }}
               variant="outlined"
             >
               Login
             </MaptyProButton>
-            <MaptyProButton variant="contained">Sign up</MaptyProButton>
+            <MaptyProButton
+              variant="contained"
+              onClick={() => {
+                dispatch(openLoginPage(true));
+                dispatch(switchMode(1));
+              }}
+            >
+              Sign up
+            </MaptyProButton>
           </Stack>
         </Stack>
       </Container>

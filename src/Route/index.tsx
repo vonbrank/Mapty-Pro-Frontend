@@ -30,14 +30,6 @@ const customRouter = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "login",
-    element: <Login />,
-  },
-  // {
-  //     path: "/login",
-  //     element: <Login />,
-  // },
 ]);
 
 export default customRouter;

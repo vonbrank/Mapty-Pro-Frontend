@@ -7,9 +7,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <Box
-      marginTop="7.2rem"
-    >
+    <Box marginTop="7.2rem">
       <form method="" action="">
         <Stack spacing="6.4rem">
           <TextField
@@ -31,4 +29,38 @@ const LoginForm = () => {
   );
 };
 
-export { LoginForm };
+const CreateAccountForm = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  return (
+    <Box marginTop="7.2rem">
+      <form method="" action="">
+        <Stack spacing="6.4rem">
+          <TextField
+            variant="standard"
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
+          <TextField
+            variant="standard"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            variant="standard"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <MaptyProButton variant="contained">Login</MaptyProButton>
+        </Stack>
+      </form>
+    </Box>
+  );
+};
+
+export { LoginForm, CreateAccountForm };
