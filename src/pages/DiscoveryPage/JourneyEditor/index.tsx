@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Box, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CustomAccordion } from "../CustomComponents/CustomAccordion";
-import { useAppSelector } from "../../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import CreateJourneyPanel from "./CreateJourneyPanel";
+import {
+  JourneyData,
+  setWaypoinsDisplayOnMap,
+} from "../../../Redux/JourneySlice";
 
 const JourneyEditor = () => {
+  const dispatch = useAppDispatch();
   const { journeyDataList } = useAppSelector((state) => ({
     journeyDataList: state.journey.personnal.jourenyList,
   }));
@@ -36,6 +41,9 @@ const JourneyEditor = () => {
     setCreateJourneyOpen(false);
     setJourneyAccordionList(
       journeyAccordionList.map((journey, currentIndex) => {
+        if (currentIndex == index) {
+          dispatch(setWaypoinsDisplayOnMap(journey.waypointList));
+        }
         return currentIndex == index
           ? {
               ...journey,

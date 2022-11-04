@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Collapse,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import { CustomAccordion } from "../CustomComponents/CustomAccordion";
@@ -59,13 +53,18 @@ const CreateJourneyPanel = ({
     },
   ]);
 
+  const [journeyTitle, setJourneyTitle] = useState("");
+  const [journeyDescription, setJourneyDescription] = useState("");
+  const [newWaypointName, setNewWaypointName] = useState("");
+  const [newWaypointTime, setNewWaypointTime] = useState("");
+
   useEffect(() => {
     if (createJourneyOpen && newSelectCoordinate != undefined) {
       dispatch(
         setWaypoinsDisplayOnMap([
           {
-            label: "test",
-            time: "8:00",
+            label: newWaypointName,
+            time: newWaypointTime,
             coordinate: newSelectCoordinate,
           },
           ...creactJourneyWaypointList,
@@ -77,13 +76,13 @@ const CreateJourneyPanel = ({
   const handleAddNewWaypoint = async () => {
     setCreateJourneyWaypointList([
       {
-        label: "test",
-        time: "8:00",
+        label: newWaypointName,
+        time: newWaypointTime,
         coordinate: newSelectCoordinate,
       },
       ...creactJourneyWaypointList,
     ]);
-    await dispatch(handleSelectNewCoordinate(undefined));
+    dispatch(handleSelectNewCoordinate(undefined));
   };
 
   return (
@@ -102,7 +101,10 @@ const CreateJourneyPanel = ({
               backgroundColor: theme.palette.primary.dark,
             },
           }}
-          onClick={handleClickCreateJourneyButton}
+          onClick={() => {
+            dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
+            handleClickCreateJourneyButton();
+          }}
         >
           <AddIcon
             sx={{
@@ -127,12 +129,24 @@ const CreateJourneyPanel = ({
             >
               Create a journey
             </Typography>
-            <CreateJourneyTextField size="small" label="Title" fullWidth />
+            <CreateJourneyTextField
+              size="small"
+              label="Title"
+              value={journeyTitle}
+              onChange={(e) => {
+                setJourneyTitle(e.target.value);
+              }}
+              fullWidth
+            />
             <CreateJourneyTextField
               multiline
               rows={4}
               size="small"
               label="Description"
+              value={journeyDescription}
+              onChange={(e) => {
+                setJourneyDescription(e.target.value);
+              }}
               fullWidth
             />
             <Collapse in={newSelectCoordinate != undefined}>
@@ -165,8 +179,18 @@ const CreateJourneyPanel = ({
               </Stack>
               <Stack spacing={"1.6rem"}>
                 <Stack direction={"row"} spacing={"1.6rem"}>
-                  <CreateJourneyTextField size="small" label="Name" />
-                  <CreateJourneyTextField size="small" label="Time" />
+                  <CreateJourneyTextField
+                    size="small"
+                    label="Name"
+                    value={newWaypointName}
+                    onChange={(e) => setNewWaypointName(e.target.value)}
+                  />
+                  <CreateJourneyTextField
+                    size="small"
+                    label="Time"
+                    value={newWaypointTime}
+                    onChange={(e) => setNewWaypointTime(e.target.value)}
+                  />
                 </Stack>
                 <Stack
                   direction={"row"}
@@ -205,10 +229,11 @@ const CreateJourneyPanel = ({
               variant="contained"
               fullWidth
               onClick={() => {
+                handleClickCreateJourneyButton();
                 dispatch(
                   addPersonalJourney({
-                    title: "Test",
-                    description: "nice",
+                    title: journeyTitle,
+                    description: journeyDescription,
                     waypointList: creactJourneyWaypointList,
                   })
                 );
