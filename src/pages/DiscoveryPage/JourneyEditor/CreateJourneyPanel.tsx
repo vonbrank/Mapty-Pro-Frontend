@@ -16,6 +16,8 @@ import {
   addPersonalJourney,
 } from "../../../Redux/JourneySlice";
 import { red } from "@mui/material/colors";
+import { Dayjs } from "dayjs";
+import CreateJourneyPicker from "../CustomComponents/CustomTimePicker";
 
 const newJourneyErrorMessages = {
   title: "Journey title should not be empty.",
@@ -58,7 +60,9 @@ const CreateJourneyPanel = ({
   const [journeyTitle, setJourneyTitle] = useState("");
   const [journeyDescription, setJourneyDescription] = useState("");
   const [newWaypointName, setNewWaypointName] = useState("");
-  const [newWaypointTime, setNewWaypointTime] = useState("");
+  // const [newWaypointTime, setNewWaypointTime] = useState("");
+  const [newWaypointTimeValue, setNewWaypointTimeValue] =
+    React.useState<Dayjs | null>(null);
 
   const [newJourneyError, setNewJourneyerror] = useState(false);
   const [newJourneyErrorMessage, setNewJourneyErrorMessage] = useState("");
@@ -71,7 +75,7 @@ const CreateJourneyPanel = ({
         setWaypoinsDisplayOnMap([
           {
             label: newWaypointName,
-            time: newWaypointTime,
+            time: newWaypointTimeValue ? newWaypointTimeValue.toString() : "",
             coordinate: newSelectCoordinate,
           },
           ...creactJourneyWaypointList,
@@ -98,9 +102,10 @@ const CreateJourneyPanel = ({
   const checkWaypointLegal = (): boolean => {
     if (newWaypointName === "")
       setNewWaypointErrorMessage(newWaypointErrorMessages.name);
-    if (newWaypointTime === "")
+    if (newWaypointTimeValue?.toString() === "" || newWaypointTimeValue == null)
       setNewWaypointErrorMessage(newWaypointErrorMessages.time);
-    const res: boolean = newWaypointName !== "" && newWaypointTime !== "";
+    const res: boolean =
+      newWaypointName !== "" && newWaypointTimeValue?.toString() !== "";
     setNewWaypointerror(!res);
     return res;
   };
@@ -110,13 +115,13 @@ const CreateJourneyPanel = ({
     setCreateJourneyWaypointList([
       {
         label: newWaypointName,
-        time: newWaypointTime,
+        time: newWaypointTimeValue ? newWaypointTimeValue.toString() : "",
         coordinate: newSelectCoordinate,
       },
       ...creactJourneyWaypointList,
     ]);
     setNewWaypointName("");
-    setNewWaypointTime("");
+    setNewWaypointTimeValue(null);
     dispatch(handleSelectNewCoordinate(undefined));
   };
 
@@ -124,7 +129,7 @@ const CreateJourneyPanel = ({
     setJourneyTitle("");
     setJourneyDescription("");
     setNewWaypointName("");
-    setNewWaypointTime("");
+    setNewWaypointTimeValue(null);
     setNewJourneyerror(false);
     setNewWaypointerror(false);
     setCreateJourneyWaypointList([]);
@@ -239,11 +244,10 @@ const CreateJourneyPanel = ({
                     value={newWaypointName}
                     onChange={(e) => setNewWaypointName(e.target.value)}
                   />
-                  <CreateJourneyTextField
-                    size="small"
+                  <CreateJourneyPicker
                     label="Time"
-                    value={newWaypointTime}
-                    onChange={(e) => setNewWaypointTime(e.target.value)}
+                    value={newWaypointTimeValue}
+                    onChange={(newValue) => setNewWaypointTimeValue(newValue)}
                   />
                 </Stack>
                 <Stack
