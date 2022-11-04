@@ -19,6 +19,7 @@ import {
 } from "leaflet";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { handleSelectNewCoordinate } from "../../Redux/JourneySlice";
+import { WaypointPopUpCard } from "../../pages/DiscoveryPage/CustomComponents/Waypoint";
 // import { tileLayer } from "leaflet.chinatmsproviders";
 
 function MapExampleOperationHook() {
@@ -127,7 +128,7 @@ const MapDiscovery = () => {
             key={index}
           >
             <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
+              <WaypointPopUpCard label={waypoint.label} time={waypoint.time} />
             </Popup>
           </Marker>
         ))}

@@ -42,24 +42,28 @@ const JourneyEditor = () => {
     setJourneyAccordionList(
       journeyAccordionList.map((journey, currentIndex) => {
         if (currentIndex == index) {
-          dispatch(setWaypoinsDisplayOnMap(journey.waypointList));
+          if (journey.expanded) {
+            dispatch(setWaypoinsDisplayOnMap([]));
+          } else {
+            dispatch(setWaypoinsDisplayOnMap(journey.waypointList));
+          }
+          return {
+            ...journey,
+            expanded: !journey.expanded,
+          };
         }
-        return currentIndex == index
-          ? {
-              ...journey,
-              expanded: !journey.expanded,
-            }
-          : {
-              ...journey,
-              expanded: false,
-            };
+        return {
+          ...journey,
+          expanded: false,
+        };
       })
     );
   };
 
-  const handleClickCreateJourneyButton = () => {
+  const handleCreateJourneyButtonClick = () => {
     if (createJourneyOpen) {
       setCreateJourneyOpen(false);
+      dispatch(setWaypoinsDisplayOnMap([]));
     } else {
       setCreateJourneyOpen(true);
       setJourneyAccordionList(
@@ -71,6 +75,11 @@ const JourneyEditor = () => {
         })
       );
     }
+  };
+
+  const handleCreateJourneySubmit = () => {
+    setCreateJourneyOpen(false);
+    dispatch(setWaypoinsDisplayOnMap([]));
   };
 
   return (
@@ -95,7 +104,8 @@ const JourneyEditor = () => {
     >
       <CreateJourneyPanel
         createJourneyOpen={createJourneyOpen}
-        handleClickCreateJourneyButton={handleClickCreateJourneyButton}
+        onCreateJourneyButtonClick={handleCreateJourneyButtonClick}
+        onCreateJourneySubmit={handleCreateJourneySubmit}
       />
       <Divider
         sx={{

@@ -9,18 +9,33 @@ import { JourneyWaypointList } from "../CustomComponents/Waypoint";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
 } from "../../../Redux/JourneySlice";
+import { red } from "@mui/material/colors";
+
+const newJourneyErrorMessages = {
+  title: "Journey title should not be empty.",
+  description: "Journey description should not be empty.",
+  waypoint: "You should select at least 2 waypoints for a journey.",
+};
+
+const newWaypointErrorMessages = {
+  name: "Waypoint name should not be empty.",
+  time: "Waypoint time should not be empty.",
+};
 
 const CreateJourneyPanel = ({
   createJourneyOpen,
-  handleClickCreateJourneyButton,
+  onCreateJourneyButtonClick,
+  onCreateJourneySubmit,
 }: {
   createJourneyOpen: boolean;
-  handleClickCreateJourneyButton: () => void;
+  onCreateJourneyButtonClick: () => void;
+  onCreateJourneySubmit: () => void;
 }) => {
   const theme = useTheme();
 
@@ -38,25 +53,17 @@ const CreateJourneyPanel = ({
         lng: number;
       };
     }[]
-  >([
-    {
-      label: "ZhengXin building",
-      time: "08:00",
-    },
-    {
-      label: "ZhengXin building",
-      time: "12:00",
-    },
-    {
-      label: "ZhengXin building",
-      time: "16:00",
-    },
-  ]);
+  >([]);
 
   const [journeyTitle, setJourneyTitle] = useState("");
   const [journeyDescription, setJourneyDescription] = useState("");
   const [newWaypointName, setNewWaypointName] = useState("");
   const [newWaypointTime, setNewWaypointTime] = useState("");
+
+  const [newJourneyError, setNewJourneyerror] = useState(false);
+  const [newJourneyErrorMessage, setNewJourneyErrorMessage] = useState("");
+  const [newWaypointError, setNewWaypointerror] = useState(false);
+  const [newWaypointErrorMessage, setNewWaypointErrorMessage] = useState("");
 
   useEffect(() => {
     if (createJourneyOpen && newSelectCoordinate != undefined) {
@@ -73,7 +80,33 @@ const CreateJourneyPanel = ({
     }
   }, [newSelectCoordinate]);
 
+  const checkJourneyLegal = (): boolean => {
+    if (creactJourneyWaypointList.length < 2)
+      setNewJourneyErrorMessage(newJourneyErrorMessages.waypoint);
+    if (journeyDescription === "")
+      setNewJourneyErrorMessage(newJourneyErrorMessages.description);
+    if (journeyTitle === "")
+      setNewJourneyErrorMessage(newJourneyErrorMessages.title);
+    const res: boolean =
+      journeyTitle !== "" &&
+      journeyDescription !== "" &&
+      creactJourneyWaypointList.length >= 2;
+    setNewJourneyerror(!res);
+    return res;
+  };
+
+  const checkWaypointLegal = (): boolean => {
+    if (newWaypointName === "")
+      setNewWaypointErrorMessage(newWaypointErrorMessages.name);
+    if (newWaypointTime === "")
+      setNewWaypointErrorMessage(newWaypointErrorMessages.time);
+    const res: boolean = newWaypointName !== "" && newWaypointTime !== "";
+    setNewWaypointerror(!res);
+    return res;
+  };
+
   const handleAddNewWaypoint = async () => {
+    if (!checkWaypointLegal()) return;
     setCreateJourneyWaypointList([
       {
         label: newWaypointName,
@@ -82,18 +115,39 @@ const CreateJourneyPanel = ({
       },
       ...creactJourneyWaypointList,
     ]);
+    setNewWaypointName("");
+    setNewWaypointTime("");
     dispatch(handleSelectNewCoordinate(undefined));
+  };
+
+  const clearNewJourneyData = () => {
+    setJourneyTitle("");
+    setJourneyDescription("");
+    setNewWaypointName("");
+    setNewWaypointTime("");
+    setNewJourneyerror(false);
+    setNewWaypointerror(false);
+    setCreateJourneyWaypointList([]);
   };
 
   return (
     <>
       <Stack
         direction={"row"}
-        justifyContent="flex-end"
+        justifyContent="space-between"
+        alignItems={"center"}
         sx={{
-          paddingY: "1.6rem",
+          paddingY: "0.8rem",
         }}
       >
+        <IconButton sx={{ transform: "translateX(-0.8rem)" }}>
+          <FormatListBulletedIcon
+            sx={{
+              color: "#fff",
+              fontSize: "3.6rem",
+            }}
+          />
+        </IconButton>
         <IconButton
           sx={{
             backgroundColor: theme.palette.primary.main,
@@ -103,7 +157,7 @@ const CreateJourneyPanel = ({
           }}
           onClick={() => {
             dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
-            handleClickCreateJourneyButton();
+            onCreateJourneyButtonClick();
           }}
         >
           <AddIcon
@@ -215,21 +269,42 @@ const CreateJourneyPanel = ({
                   </Typography>
                 </Stack>
               </Stack>
+              <Collapse in={newWaypointError}>
+                <Typography
+                  sx={{ "&.MuiTypography-root": { color: red[400] } }}
+                >
+                  {newWaypointErrorMessage}
+                </Typography>
+              </Collapse>
             </Collapse>
             <JourneyWaypointList
               sx={{
                 "&.MuiList-root": {
                   marginTop: newSelectCoordinate ? "1.6rem" : 0,
+                  paddingY:
+                    creactJourneyWaypointList.length !== 0 ? "0.8rem" : 0,
                   transition: "all 300ms",
                 },
               }}
               waypointList={creactJourneyWaypointList}
             />
+            <Collapse in={newJourneyError}>
+              <Typography sx={{ "&.MuiTypography-root": { color: red[400] } }}>
+                {newJourneyErrorMessage}
+              </Typography>
+            </Collapse>
             <MaptyProButton
+              sx={{
+                "&.MuiButtonBase-root": {
+                  marginTop: newJourneyError ? "1.6rem" : 0,
+                  transition: "all 300ms",
+                },
+              }}
               variant="contained"
               fullWidth
               onClick={() => {
-                handleClickCreateJourneyButton();
+                if (!checkJourneyLegal()) return;
+                onCreateJourneySubmit();
                 dispatch(
                   addPersonalJourney({
                     title: journeyTitle,
@@ -237,6 +312,7 @@ const CreateJourneyPanel = ({
                     waypointList: creactJourneyWaypointList,
                   })
                 );
+                clearNewJourneyData();
               }}
             >
               Go!
