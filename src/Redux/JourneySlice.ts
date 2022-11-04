@@ -193,18 +193,40 @@ export const journeySlice = createSlice({
         {
           label: string;
           time: string;
-          coordinate: {
+          coordinate?: {
             lat: number;
             lng: number;
           };
         }[]
       >
     ) => {
-      state.waypointsDisplayOnMap = action.payload;
+      state.waypointsDisplayOnMap = action.payload
+        .filter((waypoint) => waypoint.coordinate != undefined)
+        .map(
+          (waypoint) =>
+            waypoint as {
+              label: string;
+              time: string;
+              coordinate: {
+                lat: number;
+                lng: number;
+              };
+            }
+        );
+    },
+    addPersonalJourney: (state, action: PayloadAction<JourneyData>) => {
+      state.personnal.jourenyList = [
+        action.payload,
+        ...state.personnal.jourenyList,
+      ];
     },
   },
 });
 
-export const { handleSelectNewCoordinate, setWaypoinsDisplayOnMap } = journeySlice.actions;
+export const {
+  handleSelectNewCoordinate,
+  setWaypoinsDisplayOnMap,
+  addPersonalJourney,
+} = journeySlice.actions;
 
 export default journeySlice.reducer;

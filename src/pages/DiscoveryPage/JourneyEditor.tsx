@@ -23,6 +23,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
+  addPersonalJourney,
 } from "../../Redux/JourneySlice";
 
 const JourneyEditor = () => {
@@ -35,11 +36,21 @@ const JourneyEditor = () => {
     newSelectCoordinate: state.journey.newSelectCoordinate,
   }));
 
-  const [journeyList, setJourneyList] = useState(
+  const [journeyAccordionList, setJourneyAccordionList] = useState(
     journeyDataList.map((journeyData) => ({
       expanded: false,
+      ...journeyData,
     }))
   );
+
+  useEffect(() => {
+    setJourneyAccordionList(
+      journeyDataList.map((journeyData) => ({
+        ...journeyData,
+        expanded: false,
+      }))
+    );
+  }, [journeyDataList]);
 
   const [creactJourneyWaypointList, setCreateJourneyWaypointList] = useState<
     {
@@ -77,17 +88,18 @@ const JourneyEditor = () => {
     event: React.SyntheticEvent,
     index: number
   ) => {
-    setJourneyList(
-      journeyList.map((journey, currentIndex) => {
-        if (currentIndex == index) {
-          return {
-            expanded: !journey.expanded,
-          };
-        } else {
-          return {
-            expanded: false,
-          };
-        }
+    setCreateJourneyOpen(false);
+    setJourneyAccordionList(
+      journeyAccordionList.map((journey, currentIndex) => {
+        return currentIndex == index
+          ? {
+              ...journey,
+              expanded: !journey.expanded,
+            }
+          : {
+              ...journey,
+              expanded: false,
+            };
       })
     );
   };
@@ -113,23 +125,28 @@ const JourneyEditor = () => {
             time: "8:00",
             coordinate: newSelectCoordinate,
           },
-          ...creactJourneyWaypointList
-            .filter((waypoint) => waypoint.coordinate != undefined)
-            .map(
-              (waypoint) =>
-                waypoint as {
-                  label: string;
-                  time: string;
-                  coordinate: {
-                    lat: number;
-                    lng: number;
-                  };
-                }
-            ),
+          ...creactJourneyWaypointList,
         ])
       );
     }
   }, [newSelectCoordinate]);
+
+  const handleClickCreateJourneyButton = () => {
+    if (createJourneyOpen) {
+      setCreateJourneyOpen(false);
+    } else {
+      setCreateJourneyOpen(true);
+      setJourneyAccordionList(
+        journeyAccordionList.map((journey, currentIndex) => {
+          return {
+            ...journey,
+            expanded: false,
+          };
+        })
+      );
+      dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
+    }
+  };
 
   return (
     <Box
@@ -165,26 +182,7 @@ const JourneyEditor = () => {
               backgroundColor: theme.palette.primary.dark,
             },
           }}
-          onClick={() => {
-            setCreateJourneyOpen((current) => !current);
-            dispatch(
-              setWaypoinsDisplayOnMap(
-                creactJourneyWaypointList
-                  .filter((waypoint) => waypoint.coordinate != undefined)
-                  .map(
-                    (waypoint) =>
-                      waypoint as {
-                        label: string;
-                        time: string;
-                        coordinate: {
-                          lat: number;
-                          lng: number;
-                        };
-                      }
-                  )
-              )
-            );
-          }}
+          onClick={handleClickCreateJourneyButton}
         >
           <AddIcon
             sx={{
@@ -233,23 +231,7 @@ const JourneyEditor = () => {
                   <IconButton
                     onClick={() => {
                       dispatch(
-                        setWaypoinsDisplayOnMap(
-                          creactJourneyWaypointList
-                            .filter(
-                              (waypoint) => waypoint.coordinate != undefined
-                            )
-                            .map(
-                              (waypoint) =>
-                                waypoint as {
-                                  label: string;
-                                  time: string;
-                                  coordinate: {
-                                    lat: number;
-                                    lng: number;
-                                  };
-                                }
-                            )
-                        )
+                        setWaypoinsDisplayOnMap(creactJourneyWaypointList)
                       );
                       dispatch(handleSelectNewCoordinate(undefined));
                     }}
@@ -290,9 +272,28 @@ const JourneyEditor = () => {
                 </Stack>
               </Stack>
             </Collapse>
-
-            <JourneyWaypointList waypointList={creactJourneyWaypointList} />
-            <MaptyProButton variant="contained" fullWidth>
+            <JourneyWaypointList
+              sx={{
+                "&.MuiList-root": {
+                  marginTop: newSelectCoordinate ? "1.6rem" : 0,
+                  transition: "all 300ms",
+                },
+              }}
+              waypointList={creactJourneyWaypointList}
+            />
+            <MaptyProButton
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                dispatch(
+                  addPersonalJourney({
+                    title: "Test",
+                    description: "nice",
+                    waypointList: creactJourneyWaypointList,
+                  })
+                );
+              }}
+            >
               Go!
             </MaptyProButton>
           </Stack>
@@ -304,13 +305,13 @@ const JourneyEditor = () => {
           marginBottom: "1.2rem",
         }}
       />
-      {journeyDataList.map((journeyData, index) => (
+      {journeyAccordionList.map((journey, index) => (
         <CustomAccordion
           onAccordionChange={handleJourneyListAccordionChange}
-          expanded={journeyList[index].expanded}
+          expanded={journey.expanded}
           key={index}
           index={index}
-          journeyData={journeyData}
+          journeyData={journey}
         />
       ))}
     </Box>

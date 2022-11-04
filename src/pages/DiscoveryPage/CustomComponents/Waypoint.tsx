@@ -1,17 +1,27 @@
 import React from "react";
-import { List, ListItemButton, Stack, Typography, Box } from "@mui/material";
+import {
+  List,
+  ListItemButton,
+  Stack,
+  Typography,
+  Box,
+  SxProps,
+} from "@mui/material";
 import { blue } from "@mui/material/colors";
+import { Theme } from "@mui/system";
 
 export const JourneyWaypointList = ({
   waypointList,
+  sx,
 }: {
   waypointList: {
     label: string;
     time: string;
   }[];
+  sx?: SxProps<Theme>;
 }) => {
   return (
-    <List>
+    <List sx={sx}>
       {waypointList.map((waypoint, index) => (
         <ListItemButton key={index}>
           <Stack
