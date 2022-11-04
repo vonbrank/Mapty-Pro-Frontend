@@ -17,6 +17,8 @@ import {
   LeafletMouseEvent,
   LayerEvent,
 } from "leaflet";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { handleSelectNewCoordinate } from "../../Redux/JourneySlice";
 // import { tileLayer } from "leaflet.chinatmsproviders";
 
 function MapExampleOperationHook() {
@@ -84,11 +86,16 @@ const LocationMarker = ({
 };
 
 const MapDiscovery = () => {
-  const [marksPosition, setMarksPosition] = useState<LatLng[]>([]);
+  const { waypointsDisplayOnMap } = useAppSelector((state) => ({
+    waypointsDisplayOnMap: state.journey.waypointsDisplayOnMap,
+  }));
+  const dispatch = useAppDispatch();
 
   const handleClickMap = (e: LeafletMouseEvent) => {
     console.log(`[location marker] event latlng = `, e.latlng);
-    setMarksPosition([e.latlng, ...marksPosition]);
+    dispatch(
+      handleSelectNewCoordinate({ lat: e.latlng.lat, lng: e.latlng.lng })
+    );
   };
 
   return (
@@ -114,8 +121,11 @@ const MapDiscovery = () => {
         />
         <MapDiscoveryOperationHook />
         <LocationMarker handleClickMap={handleClickMap} />
-        {marksPosition.map((makPosition, index) => (
-          <Marker position={[makPosition.lat, makPosition.lng]} key={index}>
+        {waypointsDisplayOnMap.map((waypoint, index) => (
+          <Marker
+            position={[waypoint.coordinate.lat, waypoint.coordinate.lng]}
+            key={index}
+          >
             <Popup>
               A pretty CSS3 popup. <br /> Easily customizable.
             </Popup>

@@ -6,10 +6,14 @@ import {
   Stack,
   Typography,
   Box,
+  List,
+  ListItemButton,
+  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { JourneyData } from "..";
+import { JourneyData } from "../../../Redux/JourneySlice";
 import { blue } from "@mui/material/colors";
+import { JourneyWaypointList } from "./Waypoint";
 
 const CustomAccordion = ({
   expanded,
@@ -28,7 +32,9 @@ const CustomAccordion = ({
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`journey-data-${index}-content`}
       >
-        <Typography>{journeyData.title}</Typography>
+        <Typography sx={{ fontSize: "1.8rem", fontWeight: 500 }}>
+          {journeyData.title}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography
@@ -38,33 +44,14 @@ const CustomAccordion = ({
         >
           {journeyData.description}
         </Typography>
-        <Stack spacing={"0.8rem"} marginTop={"1.6rem"}>
-          {journeyData.waypointList.map((waypoint, index) => (
-            <Stack
-              direction={"row"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              key={index}
-            >
-              <Typography
-                sx={{
-                  textTransform: "capitalize",
-                }}
-              >
-                {waypoint.label}
-              </Typography>
-              <Box
-                sx={{
-                  fontSize: "1.2rem",
-                  padding: "0.6rem 1.2rem",
-                  backgroundColor: blue[300],
-                  borderRadius: "100rem",
-                }}
-              >
-                {waypoint.time}
-              </Box>
-            </Stack>
-          ))}
+        <Divider
+          sx={{
+            borderColor: "rgba(255, 255, 255, 0.5)",
+            marginTop: "1.2rem",
+          }}
+        />
+        <Stack spacing={"0.8rem"}>
+          <JourneyWaypointList waypointList={journeyData.waypointList} />
         </Stack>
       </AccordionDetails>
     </Accordion>
