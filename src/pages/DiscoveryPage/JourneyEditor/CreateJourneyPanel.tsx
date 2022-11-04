@@ -1,56 +1,39 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Collapse,
-  Container,
-  Divider,
   IconButton,
   Stack,
-  styled,
-  TextField,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
-import { CustomAccordion } from "./CustomComponents/CustomAccordion";
-import { grey } from "@mui/material/colors";
-import { CreateJourneyTextField } from "./CustomComponents/CustomTextField";
-import { MaptyProButton } from "../../components/CommonButton";
-import { JourneyWaypointList } from "./CustomComponents/Waypoint";
-import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { CustomAccordion } from "../CustomComponents/CustomAccordion";
+import { CreateJourneyTextField } from "../CustomComponents/CustomTextField";
+import { MaptyProButton } from "../../../components/CommonButton";
+import { JourneyWaypointList } from "../CustomComponents/Waypoint";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 import {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
-} from "../../Redux/JourneySlice";
+} from "../../../Redux/JourneySlice";
 
-const JourneyEditor = () => {
+const CreateJourneyPanel = ({
+  createJourneyOpen,
+  handleClickCreateJourneyButton,
+}: {
+  createJourneyOpen: boolean;
+  handleClickCreateJourneyButton: () => void;
+}) => {
+  const theme = useTheme();
+
   const dispatch = useAppDispatch();
-
-  const [expanded, setExpanded] = React.useState<string | false>(false);
-
-  const { journeyDataList, newSelectCoordinate } = useAppSelector((state) => ({
-    journeyDataList: state.journey.personnal.jourenyList,
+  const { newSelectCoordinate } = useAppSelector((state) => ({
     newSelectCoordinate: state.journey.newSelectCoordinate,
   }));
-
-  const [journeyAccordionList, setJourneyAccordionList] = useState(
-    journeyDataList.map((journeyData) => ({
-      expanded: false,
-      ...journeyData,
-    }))
-  );
-
-  useEffect(() => {
-    setJourneyAccordionList(
-      journeyDataList.map((journeyData) => ({
-        ...journeyData,
-        expanded: false,
-      }))
-    );
-  }, [journeyDataList]);
 
   const [creactJourneyWaypointList, setCreateJourneyWaypointList] = useState<
     {
@@ -76,46 +59,6 @@ const JourneyEditor = () => {
     },
   ]);
 
-  const [createJourneyOpen, setCreateJourneyOpen] = useState(false);
-  const theme = useTheme();
-
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
-
-  const handleJourneyListAccordionChange = (
-    event: React.SyntheticEvent,
-    index: number
-  ) => {
-    setCreateJourneyOpen(false);
-    setJourneyAccordionList(
-      journeyAccordionList.map((journey, currentIndex) => {
-        return currentIndex == index
-          ? {
-              ...journey,
-              expanded: !journey.expanded,
-            }
-          : {
-              ...journey,
-              expanded: false,
-            };
-      })
-    );
-  };
-
-  const handleAddNewWaypoint = async () => {
-    setCreateJourneyWaypointList([
-      {
-        label: "test",
-        time: "8:00",
-        coordinate: newSelectCoordinate,
-      },
-      ...creactJourneyWaypointList,
-    ]);
-    await dispatch(handleSelectNewCoordinate(undefined));
-  };
-
   useEffect(() => {
     if (createJourneyOpen && newSelectCoordinate != undefined) {
       dispatch(
@@ -131,43 +74,20 @@ const JourneyEditor = () => {
     }
   }, [newSelectCoordinate]);
 
-  const handleClickCreateJourneyButton = () => {
-    if (createJourneyOpen) {
-      setCreateJourneyOpen(false);
-    } else {
-      setCreateJourneyOpen(true);
-      setJourneyAccordionList(
-        journeyAccordionList.map((journey, currentIndex) => {
-          return {
-            ...journey,
-            expanded: false,
-          };
-        })
-      );
-      dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
-    }
+  const handleAddNewWaypoint = async () => {
+    setCreateJourneyWaypointList([
+      {
+        label: "test",
+        time: "8:00",
+        coordinate: newSelectCoordinate,
+      },
+      ...creactJourneyWaypointList,
+    ]);
+    await dispatch(handleSelectNewCoordinate(undefined));
   };
 
   return (
-    <Box
-      className="Discovery-Page__editor-root"
-      sx={{
-        width: "40rem",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        zIndex: 501,
-        backgroundColor: "rgb(46, 52, 57, 0.8)",
-        backdropFilter: "blur(10px)",
-        padding: "6.4rem 3.2rem",
-        overflow: "overlay",
-        borderRight: "1px solid rgba(0, 0, 0, 0.2)",
-        "& .MuiTypography-root": {
-          color: "#fff",
-        },
-      }}
-    >
+    <>
       <Stack
         direction={"row"}
         justifyContent="flex-end"
@@ -299,23 +219,8 @@ const JourneyEditor = () => {
           </Stack>
         </Box>
       </Collapse>
-      <Divider
-        sx={{
-          borderColor: "rgba(255, 255, 255, 0.5)",
-          marginBottom: "1.2rem",
-        }}
-      />
-      {journeyAccordionList.map((journey, index) => (
-        <CustomAccordion
-          onAccordionChange={handleJourneyListAccordionChange}
-          expanded={journey.expanded}
-          key={index}
-          index={index}
-          journeyData={journey}
-        />
-      ))}
-    </Box>
+    </>
   );
 };
 
-export default JourneyEditor;
+export default CreateJourneyPanel;

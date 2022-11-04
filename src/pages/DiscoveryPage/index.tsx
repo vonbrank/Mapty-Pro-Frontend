@@ -1,25 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
-import {
-  Box,
-  Collapse,
-  Container,
-  IconButton,
-  Stack,
-  styled,
-  TextField,
-} from "@mui/material";
+import React from "react";
+import { Box, Container } from "@mui/material";
 import { MapDiscovery } from "../../components/LeafletMap";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { CustomAccordion } from "./CustomComponents/CustomAccordion";
-import { MaptyProButton } from "../../components/CommonButton";
-import { current } from "@reduxjs/toolkit";
-import AddIcon from "@mui/icons-material/Add";
-import { useTheme } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
 import JourneyEditor from "./JourneyEditor";
 
 const DiscoveryPage = () => {
