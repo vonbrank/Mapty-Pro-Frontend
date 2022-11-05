@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container } from "@mui/material";
 import { MapDiscovery } from "../../components/LeafletMap";
 import JourneyEditor from "./JourneyEditor";
+import { useAppDispatch } from "../../Redux/hooks";
+import { getDataFromLocalStorage } from "../../Redux/JourneySlice";
 
 const DiscoveryPage = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getDataFromLocalStorage());
+  }, []);
+
   return (
     <Container
       className="Discovery-Page"

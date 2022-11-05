@@ -33,140 +33,7 @@ interface JourneyState {
 
 const initialState: JourneyState = {
   personnal: {
-    jourenyList: [
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-      {
-        title: "Harbin Institute of Technology surrounding",
-        description: "what a nice place",
-        waypointList: [
-          {
-            label: "ZhengXin building",
-            time: "08:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "12:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "16:00",
-          },
-          {
-            label: "ZhengXin building",
-            time: "19:00",
-          },
-        ],
-      },
-    ],
+    jourenyList: [],
   },
   waypointsDisplayOnMap: [],
 };
@@ -219,6 +86,21 @@ export const journeySlice = createSlice({
         action.payload,
         ...state.personnal.jourenyList,
       ];
+      localStorage.setItem(
+        "personalJourneyList",
+        JSON.stringify(state.personnal.jourenyList)
+      );
+    },
+    getDataFromLocalStorage: (state) => {
+      const personalJourneyListJson = localStorage.getItem(
+        "personalJourneyList"
+      );
+      if (!personalJourneyListJson) return;
+      const personalJourneyList: JourneyData[] | null = JSON.parse(
+        personalJourneyListJson
+      );
+      if (!personalJourneyList) return;
+      state.personnal.jourenyList = personalJourneyList;
     },
   },
 });
@@ -227,6 +109,7 @@ export const {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
+  getDataFromLocalStorage,
 } = journeySlice.actions;
 
 export default journeySlice.reducer;

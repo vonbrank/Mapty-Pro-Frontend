@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { Theme } from "@mui/system";
+import dayjs from "dayjs";
 
 export const JourneyWaypointList = ({
   waypointList,
@@ -48,7 +49,9 @@ export const JourneyWaypointList = ({
                 color: "#fff",
               }}
             >
-              {waypoint.time}
+              {waypoint.time !== ""
+                ? dayjs(waypoint.time, "HH-mm").format("HH:mm")
+                : ""}
             </Box>
           </Stack>
         </ListItemButton>

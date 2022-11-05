@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+
 import { useTheme } from "@mui/material/styles";
 import { CustomAccordion } from "../CustomComponents/CustomAccordion";
 import { CreateJourneyTextField } from "../CustomComponents/CustomTextField";
@@ -9,14 +9,15 @@ import { JourneyWaypointList } from "../CustomComponents/Waypoint";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
 import {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
+  JourneyData,
 } from "../../../Redux/JourneySlice";
 import { red } from "@mui/material/colors";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import CreateJourneyPicker from "../CustomComponents/CustomTimePicker";
 
 const newJourneyErrorMessages = {
@@ -32,299 +33,302 @@ const newWaypointErrorMessages = {
 
 const CreateJourneyPanel = ({
   createJourneyOpen,
-  onCreateJourneyButtonClick,
   onCreateJourneySubmit,
 }: {
   createJourneyOpen: boolean;
-  onCreateJourneyButtonClick: () => void;
-  onCreateJourneySubmit: () => void;
+  onCreateJourneySubmit: (newJourneyData: JourneyData) => void;
+}) => {
+  const dispatch = useAppDispatch();
+
+  const { newSelectCoordinate } = useAppSelector((state) => ({
+    newSelectCoordinate: state.journey.newSelectCoordinate,
+  }));
+  const [newJourneyData, setNewJourneyData] = useState<JourneyData>({
+    title: "",
+    description: "",
+    waypointList: [],
+  });
+
+  const [newJourneyError, setNewJourneyerror] = useState(false);
+  const [newJourneyErrorMessage, setNewJourneyErrorMessage] = useState("");
+
+  const checkJourneyLegal = (): boolean => {
+    if (newJourneyData.waypointList.length < 2)
+      setNewJourneyErrorMessage(newJourneyErrorMessages.waypoint);
+    if (newJourneyData.description === "")
+      setNewJourneyErrorMessage(newJourneyErrorMessages.description);
+    if (newJourneyData.title === "")
+      setNewJourneyErrorMessage(newJourneyErrorMessages.title);
+    const res: boolean =
+      newJourneyData.title !== "" &&
+      newJourneyData.description !== "" &&
+      newJourneyData.waypointList.length >= 2;
+    setNewJourneyerror(!res);
+    return res;
+  };
+
+  const clearNewJourneyData = () => {
+    setNewJourneyData({
+      title: "",
+      description: "",
+      waypointList: [],
+    });
+    setNewJourneyerror(false);
+  };
+
+  const handleAddNewWaypoint = (newWaypoint: {
+    label: string;
+    time: string;
+    coordinate?: {
+      lat: number;
+      lng: number;
+    };
+  }) => {
+    setNewJourneyData({
+      ...newJourneyData,
+      waypointList: [newWaypoint, ...newJourneyData.waypointList],
+    });
+    setNewWaypoint({
+      label: "",
+      time: "",
+    });
+  };
+
+  const [newWaypoint, setNewWaypoint] = useState<Waypoint>({
+    label: "",
+    time: "",
+  });
+
+  useEffect(() => {
+    if (createJourneyOpen)
+      setNewWaypoint({
+        ...newWaypoint,
+        coordinate: newSelectCoordinate,
+      });
+  }, [newSelectCoordinate]);
+
+  useEffect(() => {
+    dispatch(
+      setWaypoinsDisplayOnMap([newWaypoint, ...newJourneyData.waypointList])
+    );
+  }, [newWaypoint]);
+
+  // console.log(`[Create new journey pannel] new waypoint: `, newWaypoint);
+
+  return (
+    <Collapse in={createJourneyOpen}>
+      <Box
+        sx={{
+          backgroundColor: "#44484d",
+          padding: "1.6rem",
+          marginBottom: "1.2rem",
+        }}
+      >
+        <Stack spacing={"1.6rem"}>
+          <Typography
+            sx={{ color: "#fff", textAlign: "center", fontSize: "1.8rem" }}
+          >
+            Create a journey
+          </Typography>
+          <CreateJourneyTextField
+            size="small"
+            label="Title"
+            value={newJourneyData.title}
+            onChange={(e) => {
+              setNewJourneyData({
+                ...newJourneyData,
+                title: e.target.value,
+              });
+            }}
+            fullWidth
+          />
+          <CreateJourneyTextField
+            multiline
+            rows={4}
+            size="small"
+            label="Description"
+            value={newJourneyData.description}
+            onChange={(e) => {
+              setNewJourneyData({
+                ...newJourneyData,
+                description: e.target.value,
+              });
+            }}
+            fullWidth
+          />
+          <CreateWaypointPanel
+            newWaypoint={newWaypoint}
+            onNewWaypointChange={setNewWaypoint}
+            onAddNewWaypoint={handleAddNewWaypoint}
+          />
+          <JourneyWaypointList
+            sx={{
+              "&.MuiList-root": {
+                marginTop: newSelectCoordinate ? "1.6rem" : 0,
+                paddingY:
+                  newJourneyData.waypointList.length !== 0 ? "0.8rem" : 0,
+                transition: "all 300ms",
+              },
+            }}
+            waypointList={newJourneyData.waypointList}
+          />
+          <Collapse in={newJourneyError}>
+            <Typography sx={{ "&.MuiTypography-root": { color: red[400] } }}>
+              {newJourneyErrorMessage}
+            </Typography>
+          </Collapse>
+          <MaptyProButton
+            sx={{
+              "&.MuiButtonBase-root": {
+                marginTop: newJourneyError ? "1.6rem" : 0,
+                transition: "all 300ms",
+              },
+            }}
+            variant="contained"
+            fullWidth
+            onClick={(e) => {
+              if (!checkJourneyLegal()) return;
+              onCreateJourneySubmit(newJourneyData);
+              clearNewJourneyData();
+            }}
+          >
+            Go!
+          </MaptyProButton>
+        </Stack>
+      </Box>
+    </Collapse>
+  );
+};
+
+interface Waypoint {
+  label: string;
+  time: string;
+  coordinate?: {
+    lat: number;
+    lng: number;
+  };
+}
+
+const CreateWaypointPanel = ({
+  newWaypoint,
+  onNewWaypointChange = () => {},
+  onAddNewWaypoint = () => {},
+}: {
+  newWaypoint: Waypoint;
+  onNewWaypointChange?: (newWaypoint: Waypoint) => void;
+  onAddNewWaypoint?: (newWaypoint: Waypoint) => void;
 }) => {
   const theme = useTheme();
-
   const dispatch = useAppDispatch();
   const { newSelectCoordinate } = useAppSelector((state) => ({
     newSelectCoordinate: state.journey.newSelectCoordinate,
   }));
 
-  const [creactJourneyWaypointList, setCreateJourneyWaypointList] = useState<
-    {
-      label: string;
-      time: string;
-      coordinate?: {
-        lat: number;
-        lng: number;
-      };
-    }[]
-  >([]);
-
-  const [journeyTitle, setJourneyTitle] = useState("");
-  const [journeyDescription, setJourneyDescription] = useState("");
-  const [newWaypointName, setNewWaypointName] = useState("");
-  // const [newWaypointTime, setNewWaypointTime] = useState("");
-  const [newWaypointTimeValue, setNewWaypointTimeValue] =
-    React.useState<Dayjs | null>(null);
-
-  const [newJourneyError, setNewJourneyerror] = useState(false);
-  const [newJourneyErrorMessage, setNewJourneyErrorMessage] = useState("");
-  const [newWaypointError, setNewWaypointerror] = useState(false);
-  const [newWaypointErrorMessage, setNewWaypointErrorMessage] = useState("");
-
-  useEffect(() => {
-    if (createJourneyOpen && newSelectCoordinate != undefined) {
-      dispatch(
-        setWaypoinsDisplayOnMap([
-          {
-            label: newWaypointName,
-            time: newWaypointTimeValue ? newWaypointTimeValue.toString() : "",
-            coordinate: newSelectCoordinate,
-          },
-          ...creactJourneyWaypointList,
-        ])
-      );
-    }
-  }, [newSelectCoordinate]);
-
-  const checkJourneyLegal = (): boolean => {
-    if (creactJourneyWaypointList.length < 2)
-      setNewJourneyErrorMessage(newJourneyErrorMessages.waypoint);
-    if (journeyDescription === "")
-      setNewJourneyErrorMessage(newJourneyErrorMessages.description);
-    if (journeyTitle === "")
-      setNewJourneyErrorMessage(newJourneyErrorMessages.title);
-    const res: boolean =
-      journeyTitle !== "" &&
-      journeyDescription !== "" &&
-      creactJourneyWaypointList.length >= 2;
-    setNewJourneyerror(!res);
-    return res;
+  const handleAddNewWaypoint = async () => {
+    if (!checkWaypointLegal()) return;
+    onAddNewWaypoint(newWaypoint);
+    dispatch(handleSelectNewCoordinate(undefined));
   };
 
   const checkWaypointLegal = (): boolean => {
-    if (newWaypointName === "")
+    if (newWaypoint.label === "")
       setNewWaypointErrorMessage(newWaypointErrorMessages.name);
-    if (newWaypointTimeValue?.toString() === "" || newWaypointTimeValue == null)
+    if (newWaypoint.time === "")
       setNewWaypointErrorMessage(newWaypointErrorMessages.time);
-    const res: boolean =
-      newWaypointName !== "" && newWaypointTimeValue?.toString() !== "";
+    const res: boolean = newWaypoint.label !== "" && newWaypoint.time !== "";
     setNewWaypointerror(!res);
     return res;
   };
 
-  const handleAddNewWaypoint = async () => {
-    if (!checkWaypointLegal()) return;
-    setCreateJourneyWaypointList([
-      {
-        label: newWaypointName,
-        time: newWaypointTimeValue ? newWaypointTimeValue.toString() : "",
-        coordinate: newSelectCoordinate,
-      },
-      ...creactJourneyWaypointList,
-    ]);
-    setNewWaypointName("");
-    setNewWaypointTimeValue(null);
-    dispatch(handleSelectNewCoordinate(undefined));
-  };
-
-  const clearNewJourneyData = () => {
-    setJourneyTitle("");
-    setJourneyDescription("");
-    setNewWaypointName("");
-    setNewWaypointTimeValue(null);
-    setNewJourneyerror(false);
-    setNewWaypointerror(false);
-    setCreateJourneyWaypointList([]);
-  };
+  const [newWaypointError, setNewWaypointerror] = useState(false);
+  const [newWaypointErrorMessage, setNewWaypointErrorMessage] = useState("");
 
   return (
-    <>
+    <Collapse in={newSelectCoordinate != undefined}>
       <Stack
         direction={"row"}
-        justifyContent="space-between"
-        alignItems={"center"}
-        sx={{
-          paddingY: "0.8rem",
-        }}
+        justifyContent={"space-between"}
+        alignItems="center"
       >
-        <IconButton sx={{ transform: "translateX(-0.8rem)" }}>
-          <FormatListBulletedIcon
-            sx={{
-              color: "#fff",
-              fontSize: "3.6rem",
-            }}
-          />
-        </IconButton>
-        <IconButton
-          sx={{
-            backgroundColor: theme.palette.primary.main,
-            "&:hover": {
-              backgroundColor: theme.palette.primary.dark,
-            },
-          }}
-          onClick={() => {
-            dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
-            onCreateJourneyButtonClick();
-          }}
-        >
-          <AddIcon
-            sx={{
-              color: "#fff",
-              transform: createJourneyOpen ? "rotate(135deg)" : "rotate(0)",
-              transition: "transform 0.3s",
-            }}
-          />
-        </IconButton>
-      </Stack>
-      <Collapse in={createJourneyOpen}>
+        <Typography>New Waypoint</Typography>
         <Box
           sx={{
-            backgroundColor: "#44484d",
-            padding: "1.6rem",
-            marginBottom: "1.2rem",
+            transform: "translateX(8px)",
+            overflow: "visible",
           }}
         >
-          <Stack spacing={"1.6rem"}>
-            <Typography
-              sx={{ color: "#fff", textAlign: "center", fontSize: "1.8rem" }}
-            >
-              Create a journey
-            </Typography>
-            <CreateJourneyTextField
-              size="small"
-              label="Title"
-              value={journeyTitle}
-              onChange={(e) => {
-                setJourneyTitle(e.target.value);
-              }}
-              fullWidth
-            />
-            <CreateJourneyTextField
-              multiline
-              rows={4}
-              size="small"
-              label="Description"
-              value={journeyDescription}
-              onChange={(e) => {
-                setJourneyDescription(e.target.value);
-              }}
-              fullWidth
-            />
-            <Collapse in={newSelectCoordinate != undefined}>
-              <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
-                alignItems="center"
-              >
-                <Typography>New Waypoint</Typography>
-                <Box
-                  sx={{
-                    transform: "translateX(8px)",
-                    overflow: "visible",
-                  }}
-                >
-                  <IconButton
-                    onClick={() => {
-                      dispatch(
-                        setWaypoinsDisplayOnMap(creactJourneyWaypointList)
-                      );
-                      dispatch(handleSelectNewCoordinate(undefined));
-                    }}
-                  >
-                    <CloseIcon sx={{ color: "#fff" }} />
-                  </IconButton>
-                  <IconButton onClick={handleAddNewWaypoint}>
-                    <DoneIcon sx={{ color: "#fff" }} />
-                  </IconButton>
-                </Box>
-              </Stack>
-              <Stack spacing={"1.6rem"}>
-                <Stack direction={"row"} spacing={"1.6rem"}>
-                  <CreateJourneyTextField
-                    size="small"
-                    label="Name"
-                    value={newWaypointName}
-                    onChange={(e) => setNewWaypointName(e.target.value)}
-                  />
-                  <CreateJourneyPicker
-                    label="Time"
-                    value={newWaypointTimeValue}
-                    onChange={(newValue) => setNewWaypointTimeValue(newValue)}
-                  />
-                </Stack>
-                <Stack
-                  direction={"row"}
-                  spacing={"1.6rem"}
-                  justifyContent="space-between"
-                  sx={{
-                    "& .MuiTypography-root": {
-                      color: "#fff",
-                      "&.coordinate-number": {
-                        color: theme.palette.primary.main,
-                      },
-                    },
-                  }}
-                >
-                  <Typography>Coordinate:</Typography>
-                  <Typography className="coordinate-number">
-                    {newSelectCoordinate != undefined
-                      ? `[${newSelectCoordinate.lat.toFixed(
-                          6
-                        )}, ${newSelectCoordinate.lng.toFixed(6)}]`
-                      : ""}
-                  </Typography>
-                </Stack>
-              </Stack>
-              <Collapse in={newWaypointError}>
-                <Typography
-                  sx={{ "&.MuiTypography-root": { color: red[400] } }}
-                >
-                  {newWaypointErrorMessage}
-                </Typography>
-              </Collapse>
-            </Collapse>
-            <JourneyWaypointList
-              sx={{
-                "&.MuiList-root": {
-                  marginTop: newSelectCoordinate ? "1.6rem" : 0,
-                  paddingY:
-                    creactJourneyWaypointList.length !== 0 ? "0.8rem" : 0,
-                  transition: "all 300ms",
-                },
-              }}
-              waypointList={creactJourneyWaypointList}
-            />
-            <Collapse in={newJourneyError}>
-              <Typography sx={{ "&.MuiTypography-root": { color: red[400] } }}>
-                {newJourneyErrorMessage}
-              </Typography>
-            </Collapse>
-            <MaptyProButton
-              sx={{
-                "&.MuiButtonBase-root": {
-                  marginTop: newJourneyError ? "1.6rem" : 0,
-                  transition: "all 300ms",
-                },
-              }}
-              variant="contained"
-              fullWidth
-              onClick={() => {
-                if (!checkJourneyLegal()) return;
-                onCreateJourneySubmit();
-                dispatch(
-                  addPersonalJourney({
-                    title: journeyTitle,
-                    description: journeyDescription,
-                    waypointList: creactJourneyWaypointList,
-                  })
-                );
-                clearNewJourneyData();
-              }}
-            >
-              Go!
-            </MaptyProButton>
-          </Stack>
+          <IconButton
+            onClick={() => {
+              dispatch(handleSelectNewCoordinate(undefined));
+              onNewWaypointChange({
+                label: "",
+                time: "",
+              });
+              setNewWaypointErrorMessage("");
+            }}
+          >
+            <CloseIcon sx={{ color: "#fff" }} />
+          </IconButton>
+          <IconButton onClick={handleAddNewWaypoint}>
+            <DoneIcon sx={{ color: "#fff" }} />
+          </IconButton>
         </Box>
+      </Stack>
+      <Stack spacing={"1.6rem"}>
+        <Stack direction={"row"} spacing={"1.6rem"}>
+          <CreateJourneyTextField
+            size="small"
+            label="Name"
+            value={newWaypoint.label}
+            onChange={(e) =>
+              onNewWaypointChange({
+                ...newWaypoint,
+                label: e.target.value,
+              })
+            }
+          />
+          <CreateJourneyPicker
+            label="Time"
+            value={
+              newWaypoint.time !== "" ? dayjs(newWaypoint.time, "HH-mm") : null
+            }
+            onChange={(newValue) =>
+              onNewWaypointChange({
+                ...newWaypoint,
+                time: newValue ? `${newValue.hour()}-${newValue.minute()}` : "",
+              })
+            }
+          />
+        </Stack>
+        <Stack
+          direction={"row"}
+          spacing={"1.6rem"}
+          justifyContent="space-between"
+          sx={{
+            "& .MuiTypography-root": {
+              color: "#fff",
+              "&.coordinate-number": {
+                color: theme.palette.primary.main,
+              },
+            },
+          }}
+        >
+          <Typography>Coordinate:</Typography>
+          <Typography className="coordinate-number">
+            {newSelectCoordinate != undefined
+              ? `[${newSelectCoordinate.lat.toFixed(
+                  6
+                )}, ${newSelectCoordinate.lng.toFixed(6)}]`
+              : ""}
+          </Typography>
+        </Stack>
+      </Stack>
+      <Collapse in={newWaypointError}>
+        <Typography sx={{ "&.MuiTypography-root": { color: red[400] } }}>
+          {newWaypointErrorMessage}
+        </Typography>
       </Collapse>
-    </>
+    </Collapse>
   );
 };
 

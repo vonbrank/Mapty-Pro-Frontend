@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, IconButton, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CustomAccordion } from "../CustomComponents/CustomAccordion";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
@@ -7,7 +7,10 @@ import CreateJourneyPanel from "./CreateJourneyPanel";
 import {
   JourneyData,
   setWaypoinsDisplayOnMap,
+  addPersonalJourney,
 } from "../../../Redux/JourneySlice";
+import AddIcon from "@mui/icons-material/Add";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 const JourneyEditor = () => {
   const dispatch = useAppDispatch();
@@ -63,8 +66,8 @@ const JourneyEditor = () => {
   const handleCreateJourneyButtonClick = () => {
     if (createJourneyOpen) {
       setCreateJourneyOpen(false);
-      dispatch(setWaypoinsDisplayOnMap([]));
     } else {
+      dispatch(setWaypoinsDisplayOnMap([]));
       setCreateJourneyOpen(true);
       setJourneyAccordionList(
         journeyAccordionList.map((journey) => {
@@ -77,7 +80,8 @@ const JourneyEditor = () => {
     }
   };
 
-  const handleCreateJourneySubmit = () => {
+  const handleCreateJourneySubmit = (newJourneyData: JourneyData) => {
+    dispatch(addPersonalJourney(newJourneyData));
     setCreateJourneyOpen(false);
     dispatch(setWaypoinsDisplayOnMap([]));
   };
@@ -94,7 +98,7 @@ const JourneyEditor = () => {
         zIndex: 501,
         backgroundColor: "rgb(46, 52, 57, 0.8)",
         backdropFilter: "blur(10px)",
-        padding: "6.4rem 3.2rem",
+        padding: "3.2rem 3.2rem",
         overflow: "overlay",
         borderRight: "1px solid rgba(0, 0, 0, 0.2)",
         "& .MuiTypography-root": {
@@ -102,9 +106,45 @@ const JourneyEditor = () => {
         },
       }}
     >
+      <Stack
+        direction={"row"}
+        justifyContent="space-between"
+        alignItems={"center"}
+        sx={{
+          paddingY: "0.8rem",
+        }}
+      >
+        <IconButton sx={{ transform: "translateX(-0.8rem)" }}>
+          <FormatListBulletedIcon
+            sx={{
+              color: "#fff",
+              fontSize: "3.6rem",
+            }}
+          />
+        </IconButton>
+        <IconButton
+          sx={{
+            backgroundColor: theme.palette.primary.main,
+            "&:hover": {
+              backgroundColor: theme.palette.primary.dark,
+            },
+          }}
+          onClick={() => {
+            // dispatch(setWaypoinsDisplayOnMap(creactJourneyWaypointList));
+            handleCreateJourneyButtonClick();
+          }}
+        >
+          <AddIcon
+            sx={{
+              color: "#fff",
+              transform: createJourneyOpen ? "rotate(135deg)" : "rotate(0)",
+              transition: "transform 0.3s",
+            }}
+          />
+        </IconButton>
+      </Stack>
       <CreateJourneyPanel
         createJourneyOpen={createJourneyOpen}
-        onCreateJourneyButtonClick={handleCreateJourneyButtonClick}
         onCreateJourneySubmit={handleCreateJourneySubmit}
       />
       <Divider
