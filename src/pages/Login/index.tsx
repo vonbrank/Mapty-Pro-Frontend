@@ -6,6 +6,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { validateHeaderValue } from "http";
 import React, { useState } from "react";
@@ -38,6 +39,8 @@ const Login = () => {
 
   const tabsContent = [<LoginForm />, <CreateAccountForm />];
 
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Box
       sx={{
@@ -65,10 +68,10 @@ const Login = () => {
               paddingY: "12.8rem",
               // paddingLeft: "12.8rem",
               paddingX: "12.8rem",
-              width: "60vw",
-              transform: "translateX(40vw)",
+              width: minWidth768 ? "60vw" : "100vw",
+              transform: minWidth768 ? "translateX(40vw)" : "",
               backgroundColor: "#fff",
-              borderRadius: "2.4rem 0 0 2.4rem",
+              borderRadius: minWidth768 ? "2.4rem 0 0 2.4rem" : 0,
               boxShadow: "-4px 0px 4px rgba(0, 0, 0, 0.25)",
             },
             "&__form-box": {

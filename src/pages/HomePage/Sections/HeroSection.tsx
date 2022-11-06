@@ -1,7 +1,16 @@
 import React from "react";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 const HeroSection = () => {
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Stack
       height="calc(100vh - 7.2rem)"
@@ -35,7 +44,7 @@ const HeroSection = () => {
           "& .Home-Page__Heading-Primary": {
             color: "#fff",
             zIndex: 0,
-            width: "50%",
+            width: minWidth768 ? "50%" : "100%",
             "&--main": {
               fontSize: "4.8rem",
               fontWeight: "400",
@@ -53,7 +62,10 @@ const HeroSection = () => {
           <Typography className="Home-Page__Heading-Primary--main">
             Recording your trails in your journey
           </Typography>
-          <Typography component={'div'} className="Home-Page__Heading-Primary--sub">
+          <Typography
+            component={"div"}
+            className="Home-Page__Heading-Primary--sub"
+          >
             <p>From prestine water, to majectic forest -- </p>
             <p>we've got it all</p>
           </Typography>

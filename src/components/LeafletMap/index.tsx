@@ -8,7 +8,7 @@ import {
   LayersControl,
   useMapEvent,
 } from "react-leaflet";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { SxProps, Theme } from "@mui/system";
 import { useEffect } from "react";
 import {
@@ -99,9 +99,11 @@ const MapDiscovery = () => {
     );
   };
 
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Box
-      height="calc(100vh - 8rem)"
+      height={minWidth768 ? "calc(100vh - 8rem)" : "calc(60vh - 8rem)"}
       className="LeafletMap-root"
       sx={{
         width: "100%",

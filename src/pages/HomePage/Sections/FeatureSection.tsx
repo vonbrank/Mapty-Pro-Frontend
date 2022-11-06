@@ -1,4 +1,11 @@
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { MapExample } from "../../../components/LeafletMap";
@@ -66,6 +73,7 @@ const Feature = ({ title, content }: FeatureContent) => {
 };
 
 const FeatureSection = () => {
+  const minWidth768 = useMediaQuery("(min-width:768px)");
 
   return (
     <Box
@@ -99,22 +107,22 @@ const FeatureSection = () => {
           "&__feature-container": {
             maxWidth: "100vw",
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: minWidth768 ? "flex-end" : "center",
             padding: 0,
             height: "100%",
           },
           "&__feature-background": {
-            width: "50%",
+            width: minWidth768 ? "50%" : "100%",
             backgroundColor: "rgba(0, 0, 0, 0.2)",
             backdropFilter: "blur(10px)",
             color: "#fff",
             paddingX: "6.4rem",
-            transform: "translateX(2.4rem)",
+            transform: minWidth768 ? "translateX(2.4rem)" : "translateX(0)",
             overflow: "hidden",
           },
           "&__feature-box": {
             height: "100%",
-            maxWidth: "51.2rem",
+            maxWidth: minWidth768 ? "51.2rem" : "100%",
           },
         },
       }}

@@ -1,4 +1,10 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React from "react";
 
 const logoList: { label: string; url: string }[][] = [
@@ -37,6 +43,8 @@ const logoList: { label: string; url: string }[][] = [
 ];
 
 const AsFeaturedInSection = () => {
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Box
       className="As-Feature-In-Section"
@@ -51,9 +59,9 @@ const AsFeaturedInSection = () => {
             marginBottom: "1.6rem",
           },
           "&__logo": {
-            height: "4.8rem",
+            height: minWidth768 ? "4.8rem" : "3.6rem",
             "&--height": {
-              height: "9.6rem",
+              height: minWidth768 ? "9.6rem" : "7.2rem",
             },
           },
         },

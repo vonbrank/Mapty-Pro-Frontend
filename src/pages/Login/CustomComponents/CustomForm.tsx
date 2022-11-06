@@ -56,7 +56,7 @@ const CreateAccountForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <MaptyProButton variant="contained">Login</MaptyProButton>
+          <MaptyProButton variant="contained">Create Account</MaptyProButton>
         </Stack>
       </form>
     </Box>

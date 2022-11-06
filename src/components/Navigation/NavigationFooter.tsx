@@ -37,7 +37,7 @@ const NavigationFooter = () => {
           }}
         >
           <Typography>© Copyright 2022</Typography>
-          <Typography>
+          <Typography sx={{ textAlign: "center" }}>
             Use for the software engineering course in Harbin Institute of
             Technology
           </Typography>

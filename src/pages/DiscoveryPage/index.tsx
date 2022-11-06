@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Container } from "@mui/material";
+import { Box, Container, useMediaQuery } from "@mui/material";
 import { MapDiscovery } from "../../components/LeafletMap";
 import JourneyEditor from "./JourneyEditor";
 import { useAppDispatch } from "../../Redux/hooks";
@@ -12,13 +12,15 @@ const DiscoveryPage = () => {
     dispatch(getDataFromLocalStorage());
   }, []);
 
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Container
       className="Discovery-Page"
       sx={{
         "& .Discovery-Page": {},
         "& .leaflet-control-zoom.leaflet-bar.leaflet-control": {
-          transform: "translateX(40rem)",
+          transform: minWidth768 ? "translateX(40rem)" : "",
         },
         "& .MuiAccordion-root": {
           backgroundColor: "rgb(67, 72, 77)",
@@ -33,6 +35,7 @@ const DiscoveryPage = () => {
         sx={{
           position: "relative",
           zIndex: 500,
+          height: "calc(100vh - 8rem)",
         }}
       >
         <MapDiscovery />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Divider, IconButton, Stack } from "@mui/material";
+import { Box, Divider, IconButton, Stack, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CustomAccordion } from "../CustomComponents/CustomAccordion";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
@@ -91,13 +91,15 @@ const JourneyEditor = () => {
     dispatch(removePersonalJourney({ journeyId: journeyId }));
   };
 
+  const minWidth768 = useMediaQuery("(min-width:768px)");
+
   return (
     <Box
       className="Discovery-Page__editor-root"
       sx={{
-        width: "40rem",
-        height: "100%",
-        position: "absolute",
+        width: minWidth768 ? "40rem" : "100%",
+        height: minWidth768 ? "100%" : "40vh",
+        position: minWidth768 ? "absolute" : "static",
         top: 0,
         left: 0,
         zIndex: 501,
