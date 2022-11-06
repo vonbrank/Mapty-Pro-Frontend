@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 
 export interface JourneyData {
   title: string;
@@ -13,9 +14,13 @@ export interface JourneyData {
   }[];
 }
 
+export interface UniqueJourneyData extends JourneyData {
+  journeyId: string;
+}
+
 interface JourneyState {
   personnal: {
-    jourenyList: JourneyData[];
+    jourenyList: UniqueJourneyData[];
   };
   newSelectCoordinate?: {
     lng: number;
@@ -83,7 +88,10 @@ export const journeySlice = createSlice({
     },
     addPersonalJourney: (state, action: PayloadAction<JourneyData>) => {
       state.personnal.jourenyList = [
-        action.payload,
+        {
+          journeyId: uuidv4(),
+          ...action.payload,
+        },
         ...state.personnal.jourenyList,
       ];
       localStorage.setItem(
@@ -96,11 +104,23 @@ export const journeySlice = createSlice({
         "personalJourneyList"
       );
       if (!personalJourneyListJson) return;
-      const personalJourneyList: JourneyData[] | null = JSON.parse(
+      const personalJourneyList: UniqueJourneyData[] | null = JSON.parse(
         personalJourneyListJson
       );
       if (!personalJourneyList) return;
       state.personnal.jourenyList = personalJourneyList;
+    },
+    removePersonalJourney: (
+      state,
+      action: PayloadAction<{ journeyId: string }>
+    ) => {
+      state.personnal.jourenyList = state.personnal.jourenyList.filter(
+        (journey) => journey.journeyId !== action.payload.journeyId
+      );
+      localStorage.setItem(
+        "personalJourneyList",
+        JSON.stringify(state.personnal.jourenyList)
+      );
     },
   },
 });
@@ -110,6 +130,7 @@ export const {
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
   getDataFromLocalStorage,
+  removePersonalJourney,
 } = journeySlice.actions;
 
 export default journeySlice.reducer;

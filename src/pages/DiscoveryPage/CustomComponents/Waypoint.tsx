@@ -68,11 +68,7 @@ export const WaypointPopUpCard = ({
   time: string;
 }) => {
   return (
-    <Stack
-      direction={"row"}
-      justifyContent={"space-between"}
-      alignItems={"center"}
-    >
+    <Stack justifyContent={"space-between"} alignItems={"center"}>
       <Typography
         sx={{
           "&.MuiTypography-root": {
@@ -91,9 +87,11 @@ export const WaypointPopUpCard = ({
           backgroundColor: blue[300],
           borderRadius: "100rem",
           color: "#fff",
+          width: "100%",
+          textAlign: "center",
         }}
       >
-        {time}
+        {dayjs(time, "HH-mm").format("HH:mm")}
       </Box>
     </Stack>
   );

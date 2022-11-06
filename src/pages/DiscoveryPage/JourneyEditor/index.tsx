@@ -8,6 +8,7 @@ import {
   JourneyData,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
+  removePersonalJourney,
 } from "../../../Redux/JourneySlice";
 import AddIcon from "@mui/icons-material/Add";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -86,6 +87,10 @@ const JourneyEditor = () => {
     dispatch(setWaypoinsDisplayOnMap([]));
   };
 
+  const handleDeleteJourney = (journeyId: string) => {
+    dispatch(removePersonalJourney({ journeyId: journeyId }));
+  };
+
   return (
     <Box
       className="Discovery-Page__editor-root"
@@ -157,9 +162,10 @@ const JourneyEditor = () => {
         <CustomAccordion
           onAccordionChange={handleJourneyListAccordionChange}
           expanded={journey.expanded}
-          key={index}
+          key={journey.journeyId}
           index={index}
           journeyData={journey}
+          onDelete={handleDeleteJourney}
         />
       ))}
     </Box>
