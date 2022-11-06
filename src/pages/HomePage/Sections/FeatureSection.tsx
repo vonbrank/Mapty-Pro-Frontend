@@ -66,6 +66,7 @@ const Feature = ({ title, content }: FeatureContent) => {
 };
 
 const FeatureSection = () => {
+
   return (
     <Box
       className="Home-Page-Feature-Section"

@@ -1,15 +1,18 @@
-import { Paper, Stack, Box, Typography } from "@mui/material";
+import { Paper, Stack, Box, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { ReactComponent as ProfilePhotoPlaceholder } from "../assets/ProfilePhotoPlaceholder.svg";
 
 const ProfileCard = ({ className }: { className?: string }) => {
+  const minWidth900 = useMediaQuery("(min-width:900px)");
+  const minWidth600 = useMediaQuery("(min-width:600px)");
+
   return (
     <Paper
       className={`Profile-Card ${className ? className : ""}`}
       elevation={2}
       sx={{
-        width: "36rem",
+        width: minWidth900 ? "36rem" : "100%",
         padding: "3.2rem",
         "& .Profile-Card": {
           "&__profile-photo-box": {

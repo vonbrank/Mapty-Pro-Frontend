@@ -1,4 +1,10 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../components/CommonButton";
 import ProfileCard from "./CustomComponents/ProfileCard";
@@ -9,6 +15,8 @@ import {
 } from "../../components/CommonCard";
 
 const ProfilePage = () => {
+  const minWidth900 = useMediaQuery("(min-width:900px)");
+
   return (
     <Box
       sx={{
@@ -31,7 +39,11 @@ const ProfilePage = () => {
       }}
     >
       <Container>
-        <Stack direction="row" spacing="4.8rem" alignItems="flex-start">
+        <Stack
+          direction={minWidth900 ? "row" : "column-reverse"}
+          spacing="4.8rem"
+          alignItems="flex-start"
+        >
           <ProfileCard className="Profile-Page__profile-card" />
           <Box className="Profile-Page__main-box">
             <Stack
