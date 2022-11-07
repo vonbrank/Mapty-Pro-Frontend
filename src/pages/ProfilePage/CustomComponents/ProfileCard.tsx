@@ -1,7 +1,7 @@
 import { Paper, Stack, Box, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
-import { ReactComponent as ProfilePhotoPlaceholder } from "../assets/ProfilePhotoPlaceholder.svg";
+import { ReactComponent as ProfilePhotoPlaceholder } from "../../../assets/ProfilePhotoPlaceholder.svg";
 
 const ProfileCard = ({ className }: { className?: string }) => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
