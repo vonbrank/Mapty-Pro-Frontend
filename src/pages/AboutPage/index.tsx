@@ -5,6 +5,7 @@ import {
   Typography,
   Card,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -12,6 +13,7 @@ import { CustomContributorCard } from "./CustomComponents/CustomCard";
 
 const AboutPage = () => {
   const theme = useTheme();
+  const minWidth768 = useMediaQuery("(min-width:768px)");
 
   return (
     <Container
@@ -38,7 +40,7 @@ const AboutPage = () => {
             "&::after": {
               content: `""`,
               position: "absolute",
-              bottom: 0,
+              bottom: "-2px",
               left: 0,
               height: "1px",
               width: 0,
@@ -53,20 +55,23 @@ const AboutPage = () => {
       }}
     >
       <Typography className="About-Page-heading-primary">About Us</Typography>
-      <Stack spacing="2.4rem">
+      <Stack spacing="4.4rem">
         <Box>
           <Typography className="About-Page-text-content">
             This project is inspired by{" "}
             <Link className="About-Page-link" to={"."}>
               Mapty
             </Link>{" "}
-            , another web app created by{" "}
+            , a web app created by{" "}
             <Link className="About-Page-link" to={"."}>
               Jonas Schmedtmann
             </Link>{" "}
-            and used to teach how to manage a map in JavaScript. Mapty Pro is an
-            all-round improvement of Mapty. To satisfy the requirement of final
-            assignment in the course:{" "}
+            and used to teach how to manage a map in JavaScript.{" "}
+            <Link className="About-Page-link" to={"."}>
+              Mapty Pro
+            </Link>{" "}
+            is an all-round improvement of Mapty. To satisfy the requirement of
+            final assignment in the course:{" "}
             <Link className="About-Page-link" to={"."}>
               [CS33461: Service-Oriented Software Systems]
             </Link>{" "}
@@ -80,7 +85,11 @@ const AboutPage = () => {
             Contributors
           </Typography>
           <Box>
-            <Stack direction={"row"} justifyContent="space-between">
+            <Stack
+              direction={minWidth768 ? "row" : "column"}
+              justifyContent="space-between"
+              spacing="2.4rem"
+            >
               <CustomContributorCard />
               <CustomContributorCard />
               <CustomContributorCard />
