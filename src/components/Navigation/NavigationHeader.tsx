@@ -9,6 +9,11 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
+  Popover,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
 import MaptyIcon from "../../assets/mapty-icon.png";
 import Tabs from "@mui/material/Tabs";
@@ -21,8 +26,15 @@ import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
 import { grey } from "@mui/material/colors";
 import CloseIcon from "@mui/icons-material/Close";
 import ListIcon from "@mui/icons-material/List";
+import { useIntl } from "react-intl";
+import LanguageIcon from "@mui/icons-material/Language";
+import { LOCALES, messages, flattenMessages } from "../../lang";
 
-const NavigationHeader = () => {
+const NavigationHeader = ({
+  handleChangeLocale = () => {},
+}: {
+  handleChangeLocale?: (newLocale: string) => void;
+}) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { linkInfoList, activeIndex, loginPageOpen } = useAppSelector(
@@ -59,6 +71,19 @@ const NavigationHeader = () => {
   };
 
   const minWidth900 = useMediaQuery("(min-width:900px)");
+
+  const intl = useIntl();
+
+  const [langListAnchorEl, setLangListAnchorEl] =
+    React.useState<HTMLButtonElement | null>(null);
+  const handleLangButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setLangListAnchorEl(event.currentTarget);
+  };
+  const handleLangListClose = () => {
+    setLangListAnchorEl(null);
+  };
 
   return (
     <>
@@ -117,7 +142,7 @@ const NavigationHeader = () => {
               >
                 {linkInfoList.map((linkInfo, index) => (
                   <Tab
-                    label={linkInfo.label}
+                    label={intl.messages[linkInfo.label] as string}
                     key={linkInfo.label}
                     {...navigationTabProps(index)}
                     onClick={(e) => {
@@ -133,7 +158,52 @@ const NavigationHeader = () => {
               sx={{
                 display: minWidth900 ? "" : "none",
               }}
+              alignItems="center"
             >
+              <IconButton onClick={handleLangButtonClick}>
+                <LanguageIcon sx={{ fontSize: "3rem" }} />
+              </IconButton>
+              <Popover
+                open={Boolean(langListAnchorEl)}
+                id={
+                  Boolean(langListAnchorEl)
+                    ? "Navigation-lang-list-popover"
+                    : undefined
+                }
+                anchorEl={langListAnchorEl}
+                onClose={handleLangListClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <List>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleChangeLocale(LOCALES.ENGLISH)}
+                    >
+                      <ListItemText
+                        primary="English"
+                        sx={{ textAlign: "center" }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleChangeLocale(LOCALES.CHINESE)}
+                    >
+                      <ListItemText
+                        primary="中文"
+                        sx={{ textAlign: "center" }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </Popover>
               <MaptyProButton
                 onClick={() => {
                   dispatch(openLoginPage(true));
@@ -141,7 +211,7 @@ const NavigationHeader = () => {
                 }}
                 variant="outlined"
               >
-                Login
+                {intl.messages["navigation.login"] as string}
               </MaptyProButton>
               <MaptyProButton
                 variant="contained"
@@ -150,7 +220,7 @@ const NavigationHeader = () => {
                   dispatch(switchMode(1));
                 }}
               >
-                Sign up
+                {intl.messages["navigation.signup"] as string}
               </MaptyProButton>
             </Stack>
             <IconButton

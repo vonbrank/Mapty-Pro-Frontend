@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo } from "../../Redux/NavigationSlice";
 import { CustomFooterLink } from "./CustomComponents/CustomLink";
+import { useIntl } from "react-intl";
 
 const NavigationFooter = () => {
   const dispatch = useAppDispatch();
   const linkInfoList = useAppSelector((state) => state.navigation.linkInfoList);
+  const intl = useIntl();
 
   return (
     <Paper elevation={2} sx={{ paddingY: "1.2rem", zIndex: 1300 }}>
@@ -23,7 +25,7 @@ const NavigationFooter = () => {
               }}
               key={linkInfo.label}
             >
-              {linkInfo.label}
+              {intl.messages[linkInfo.label] as string}
             </CustomFooterLink>
           ))}
         </Stack>

@@ -12,22 +12,22 @@ interface NavigationState {
 const initialState: NavigationState = {
   linkInfoList: [
     {
-      label: "Home",
+      label: "navigation.home",
       path: "/",
       active: true,
     },
     {
-      label: "Discovery",
+      label: "navigation.discovery",
       path: "/discovery",
       active: false,
     },
     {
-      label: "Profile",
+      label: "navigation.profile",
       path: "/profile",
       active: false,
     },
     {
-      label: "About",
+      label: "navigation.about",
       path: "/about",
       active: false,
     },
