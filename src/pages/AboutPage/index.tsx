@@ -71,13 +71,14 @@ const AboutPage = () => {
               Mapty Pro
             </Link>{" "}
             is an all-round improvement of Mapty. To satisfy the requirement of
-            final assignment in the course:{" "}
+            the final assignment in the course provided by Harbin Institute of
+            Technology:{" "}
             <Link className="About-Page-link" to={"."}>
               [CS33461: Service-Oriented Software Systems]
             </Link>{" "}
             , we developed Mapty Pro. Not only simple function based on a public
-            Map API is provided, but also login, sharing and more services are
-            deployed in our back-end server.
+            Map API has been implemented, but also some other services are
+            deployed in our back-end server including login, sharing and more.
           </Typography>
         </Box>
         <Box>
@@ -90,9 +91,9 @@ const AboutPage = () => {
               justifyContent="space-between"
               spacing="2.4rem"
             >
-              <CustomContributorCard />
-              <CustomContributorCard />
-              <CustomContributorCard />
+              <CustomContributorCard name="Von Brank" />
+              <CustomContributorCard name="Seatle" />
+              <CustomContributorCard name="Liar" />
             </Stack>
           </Box>
         </Box>

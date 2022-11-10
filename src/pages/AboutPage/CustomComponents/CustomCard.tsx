@@ -2,13 +2,14 @@ import { Box, Container, Stack, Typography, Card, Avatar } from "@mui/material";
 import { ReactComponent as ProfilePhotoPlaceholder } from "../../../assets/ProfilePhotoPlaceholder.svg";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 
-export const CustomContributorCard = () => {
+export const CustomContributorCard = ({ name }: { name: string }) => {
   return (
     <Card
       elevation={6}
       sx={{
         padding: "2.4rem",
         transition: "all 0.5s",
+        minWidth: "30%",
         "&:hover": {
           transform: "scale(1.05) translateY(-0.5rem)",
           boxShadow:
@@ -26,7 +27,7 @@ export const CustomContributorCard = () => {
         >
           <PersonOutlineIcon />
         </Avatar>
-        <Typography sx={{ fontSize: "1.8rem" }}>Name Placeholder</Typography>
+        <Typography sx={{ fontSize: "1.8rem" }}>{name}</Typography>
       </Stack>
     </Card>
   );

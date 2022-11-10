@@ -10,7 +10,7 @@ import { IntlProvider } from "react-intl";
 import { LOCALES, messages, flattenMessages } from "./lang";
 
 function App() {
-  const [locale, setLocale] = useState(LOCALES.ENGLISH);
+  const [locale, setLocale] = useState(LOCALES.CHINESE);
   const handleChangeLocale = (newLocale: string) => {
     setLocale(newLocale);
   };

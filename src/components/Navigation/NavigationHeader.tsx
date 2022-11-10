@@ -276,7 +276,7 @@ const NavigationHeader = ({
         >
           {linkInfoList.map((linkInfo, index) => (
             <Tab
-              label={linkInfo.label}
+              label={intl.messages[linkInfo.label] as string}
               key={linkInfo.label}
               {...navigationTabProps(index)}
               onClick={(e) => {
@@ -307,7 +307,7 @@ const NavigationHeader = ({
             }}
             variant="outlined"
           >
-            Login
+            {intl.messages["navigation.login"] as string}
           </MaptyProButton>
           <MaptyProButton
             size="large"
@@ -318,7 +318,7 @@ const NavigationHeader = ({
               dispatch(switchMode(1));
             }}
           >
-            Sign up
+            {intl.messages["navigation.signup"] as string}
           </MaptyProButton>
         </Stack>
       </Stack>
