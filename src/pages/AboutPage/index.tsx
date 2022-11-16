@@ -8,12 +8,14 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { CustomContributorCard } from "./CustomComponents/CustomCard";
 
 const AboutPage = () => {
   const theme = useTheme();
   const minWidth768 = useMediaQuery("(min-width:768px)");
+  const intl = useIntl();
 
   return (
     <Container
@@ -37,6 +39,7 @@ const AboutPage = () => {
             color: theme.palette.primary.main,
             textDecoration: "none",
             position: "relative",
+            whiteSpace: "nowrap",
             "&::after": {
               content: `""`,
               position: "absolute",
@@ -54,36 +57,27 @@ const AboutPage = () => {
         },
       }}
     >
-      <Typography className="About-Page-heading-primary">About Us</Typography>
+      <Typography className="About-Page-heading-primary">
+        {intl.messages["about.headings.primary"].toString()}
+      </Typography>
       <Stack spacing="4.4rem">
         <Box>
           <Typography className="About-Page-text-content">
-            This project is inspired by{" "}
-            <Link className="About-Page-link" to={"."}>
-              Mapty
-            </Link>{" "}
-            , a web app created by{" "}
-            <Link className="About-Page-link" to={"."}>
-              Jonas Schmedtmann
-            </Link>{" "}
-            and used to teach how to manage a map in JavaScript.{" "}
-            <Link className="About-Page-link" to={"."}>
-              Mapty Pro
-            </Link>{" "}
-            is an all-round improvement of Mapty. To satisfy the requirement of
-            the final assignment in the course provided by Harbin Institute of
-            Technology:{" "}
-            <Link className="About-Page-link" to={"."}>
-              [CS33461: Service-Oriented Software Systems]
-            </Link>{" "}
-            , we developed Mapty Pro. Not only simple function based on a public
-            Map API has been implemented, but also some other services are
-            deployed in our back-end server including login, sharing and more.
+            <FormattedMessage
+              id="about.introduction"
+              values={{
+                link: (msg) => (
+                  <Link className="About-Page-link" to={"."}>
+                    {msg}
+                  </Link>
+                ),
+              }}
+            />
           </Typography>
         </Box>
         <Box>
           <Typography className="About-Page-heading-secondary">
-            Contributors
+            {intl.messages["about.headings.contributors"].toString()}
           </Typography>
           <Box>
             <Stack
@@ -99,11 +93,10 @@ const AboutPage = () => {
         </Box>
         <Box>
           <Typography className="About-Page-heading-secondary">
-            Open Source
+            {intl.messages["about.headings.openSource"].toString()}
           </Typography>
           <Typography className="About-Page-text-content">
-            This project will be open source after the course. Pull request,
-            donation and any other ways for contribution are welcomed!
+            {intl.messages["about.content.openSource"].toString()}
           </Typography>
         </Box>
       </Stack>
