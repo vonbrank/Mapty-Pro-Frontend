@@ -17,6 +17,7 @@ import {
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
 
+
   return (
     <Box
       sx={{

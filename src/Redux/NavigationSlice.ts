@@ -5,6 +5,7 @@ interface NavigationState {
     label: string;
     path: string;
     active: boolean;
+    visible: boolean;
   }[];
   activeIndex: number;
 }
@@ -15,21 +16,25 @@ const initialState: NavigationState = {
       label: "navigation.home",
       path: "/",
       active: true,
+      visible: true,
     },
     {
       label: "navigation.discovery",
       path: "/discovery",
       active: false,
+      visible: true,
     },
     {
       label: "navigation.profile",
       path: "/profile",
       active: false,
+      visible: false,
     },
     {
       label: "navigation.about",
       path: "/about",
       active: false,
+      visible: true,
     },
   ],
   activeIndex: 0,
@@ -49,9 +54,26 @@ export const navigationSlice = createSlice({
         return item;
       });
     },
+    setTabVisible: (
+      state,
+      action: PayloadAction<{
+        label: string;
+        newValue: boolean;
+      }>
+    ) => {
+      state.linkInfoList = state.linkInfoList.map((item) => {
+        if (item.label === action.payload.label) {
+          return {
+            ...item,
+            visible: action.payload.newValue,
+          };
+        }
+        return item;
+      });
+    },
   },
 });
 
-export const { navigateTo } = navigationSlice.actions;
+export const { navigateTo, setTabVisible } = navigationSlice.actions;
 
 export default navigationSlice.reducer;

@@ -24,6 +24,9 @@ const NavigationFooter = () => {
                 dispatch(navigateTo({ index: index }));
               }}
               key={linkInfo.label}
+              sx={{
+                display: linkInfo.visible ? "inline" : "none",
+              }}
             >
               {intl.messages[linkInfo.label] as string}
             </CustomFooterLink>

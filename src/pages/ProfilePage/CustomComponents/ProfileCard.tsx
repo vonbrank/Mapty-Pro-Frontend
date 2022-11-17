@@ -2,10 +2,14 @@ import { Paper, Stack, Box, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { ReactComponent as ProfilePhotoPlaceholder } from "../../../assets/ProfilePhotoPlaceholder.svg";
+import { useAppSelector } from "../../../Redux/hooks";
 
 const ProfileCard = ({ className }: { className?: string }) => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
   const minWidth600 = useMediaQuery("(min-width:600px)");
+  const { currentUser } = useAppSelector((state) => ({
+    currentUser: state.login.currentUser,
+  }));
 
   return (
     <Paper
@@ -49,9 +53,13 @@ const ProfileCard = ({ className }: { className?: string }) => {
         <Box className="Profile-Card__profile-photo-box">
           <ProfilePhotoPlaceholder />
         </Box>
-        <Typography className="Profile-Card__full-name">Full Name</Typography>
+        <Typography className="Profile-Card__full-name">
+          {currentUser?.username}
+        </Typography>
         <Typography className="Profile-Card__email">
-          test@example.com
+          {currentUser?.email
+            ? currentUser?.email
+            : "Want to bind your email addres? Click here."}
         </Typography>
         <Stack
           justifyContent="space-between"

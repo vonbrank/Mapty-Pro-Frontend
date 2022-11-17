@@ -29,8 +29,8 @@ const Login = () => {
   const dispatch = useAppDispatch();
 
   const { loginPageOpen, loginPageMode } = useAppSelector((state) => ({
-    loginPageOpen: state.login.loginPageOpen,
-    loginPageMode: state.login.mode,
+    loginPageOpen: state.login.loginPage.loginPageOpen,
+    loginPageMode: state.login.loginPage.mode,
   }));
 
   const handleLoginPageClose = () => {

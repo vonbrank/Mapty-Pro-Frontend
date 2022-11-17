@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box,
-  Button,
   Container,
   Stack,
   Typography,
@@ -9,26 +7,19 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
-  Popover,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
 } from "@mui/material";
 import MaptyIcon from "../../assets/mapty-icon.png";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { MaptyProButton } from "../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
-import { navigateTo } from "../../Redux/NavigationSlice";
-import { useLocation, useMatch, useNavigate } from "react-router-dom";
+import { navigateTo, setTabVisible } from "../../Redux/NavigationSlice";
+import { useLocation } from "react-router-dom";
 import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
-import { grey } from "@mui/material/colors";
 import CloseIcon from "@mui/icons-material/Close";
 import ListIcon from "@mui/icons-material/List";
 import { useIntl } from "react-intl";
-import LanguageIcon from "@mui/icons-material/Language";
-import { LOCALES, messages, flattenMessages } from "../../lang";
+import { CustomNavigationTab } from "./CustomComponents/CustomTab";
+import { CustomLoginButtonGroup } from "./CustomComponents/CustomButtonGroup";
+import { LanguageSwitch, ProfileDetail } from "./CustomComponents/CustomPanel";
 
 const NavigationHeader = ({
   handleChangeLocale = () => {},
@@ -37,22 +28,10 @@ const NavigationHeader = ({
 }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { linkInfoList, activeIndex, loginPageOpen } = useAppSelector(
-    (state) => ({
-      linkInfoList: state.navigation.linkInfoList,
-      activeIndex: state.navigation.activeIndex,
-      loginPageOpen: state.login.loginPageOpen,
-    })
-  );
-
-  const navigate = useNavigate();
-
-  const navigationTabProps = (index: number) => {
-    return {
-      id: `navigation-tab-${index}`,
-      "aria-controls": `navigation-tabpanel-${index}`,
-    };
-  };
+  const { linkInfoList, currentUser } = useAppSelector((state) => ({
+    linkInfoList: state.navigation.linkInfoList,
+    currentUser: state.login.currentUser,
+  }));
 
   const location = useLocation();
 
@@ -74,16 +53,14 @@ const NavigationHeader = ({
 
   const intl = useIntl();
 
-  const [langListAnchorEl, setLangListAnchorEl] =
-    React.useState<HTMLButtonElement | null>(null);
-  const handleLangButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setLangListAnchorEl(event.currentTarget);
-  };
-  const handleLangListClose = () => {
-    setLangListAnchorEl(null);
-  };
+  useEffect(() => {
+    dispatch(
+      setTabVisible({
+        label: "navigation.profile",
+        newValue: currentUser !== undefined,
+      })
+    );
+  }, [currentUser]);
 
   return (
     <>
@@ -129,9 +106,7 @@ const NavigationHeader = ({
                 display: minWidth900 ? "" : "none",
               }}
             >
-              <Tabs
-                value={activeIndex}
-                aria-label="Mapty-Pro-Navigation"
+              <CustomNavigationTab
                 sx={{
                   "& .MuiTab-root": {
                     fontSize: "1.8rem",
@@ -139,104 +114,29 @@ const NavigationHeader = ({
                     padding: "1.2rem 2.4rem",
                   },
                 }}
-              >
-                {linkInfoList.map((linkInfo, index) => (
-                  <Tab
-                    label={intl.messages[linkInfo.label] as string}
-                    key={linkInfo.label}
-                    {...navigationTabProps(index)}
-                    onClick={(e) => {
-                      navigate(linkInfo.path);
-                    }}
-                  />
-                ))}
-              </Tabs>
+              />
             </Stack>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{
-                display: minWidth900 ? "" : "none",
-              }}
-              alignItems="center"
-            >
-              <IconButton onClick={handleLangButtonClick}>
-                <LanguageIcon sx={{ fontSize: "3rem" }} />
+            <Stack direction="row" spacing={2} alignItems="center">
+              <LanguageSwitch handleChangeLocale={handleChangeLocale} />
+              {currentUser === undefined && (
+                <CustomLoginButtonGroup
+                  sx={{
+                    display: minWidth900 ? "" : "none",
+                  }}
+                />
+              )}
+              {currentUser !== undefined && <ProfileDetail />}
+              <IconButton
+                onClick={handleToggleSizeNavClick}
+                sx={{
+                  "& .MuiSvgIcon-root": { fontSize: "3rem" },
+                  display: !minWidth900 ? "" : "none",
+                }}
+              >
+                {!sideNavigationOpen && <ListIcon />}
+                {sideNavigationOpen && <CloseIcon />}
               </IconButton>
-              <Popover
-                open={Boolean(langListAnchorEl)}
-                id={
-                  Boolean(langListAnchorEl)
-                    ? "Navigation-lang-list-popover"
-                    : undefined
-                }
-                anchorEl={langListAnchorEl}
-                onClose={handleLangListClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-              >
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      onClick={() => handleChangeLocale(LOCALES.ENGLISH)}
-                    >
-                      <ListItemText
-                        primary="English"
-                        sx={{ textAlign: "center" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      onClick={() => handleChangeLocale(LOCALES.CHINESE)}
-                    >
-                      <ListItemText
-                        primary="中文"
-                        sx={{ textAlign: "center" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </List>
-              </Popover>
-              <MaptyProButton
-                onClick={() => {
-                  dispatch(openLoginPage(true));
-                  dispatch(switchMode(0));
-                }}
-                variant="outlined"
-              >
-                {intl.messages["navigation.login"] as string}
-              </MaptyProButton>
-              <MaptyProButton
-                variant="contained"
-                onClick={() => {
-                  dispatch(openLoginPage(true));
-                  dispatch(switchMode(1));
-                }}
-              >
-                {intl.messages["navigation.signup"] as string}
-              </MaptyProButton>
             </Stack>
-            <IconButton
-              onClick={handleToggleSizeNavClick}
-              sx={{
-                "& .MuiSvgIcon-root": { fontSize: "3rem" },
-                display: !minWidth900 ? "" : "none",
-              }}
-            >
-              <ListIcon
-                sx={{ display: sideNavigationOpen ? "none" : "inline-block" }}
-              />
-              <CloseIcon
-                sx={{ display: !sideNavigationOpen ? "none" : "inline-block" }}
-              />
-            </IconButton>
           </Stack>
         </Container>
       </Paper>
@@ -257,9 +157,7 @@ const NavigationHeader = ({
         alignItems="center"
         justifyContent={"center"}
       >
-        <Tabs
-          value={activeIndex}
-          aria-label="Mapty-Pro-Navigation"
+        <CustomNavigationTab
           orientation="vertical"
           sx={{
             "& .MuiTab-root": {
@@ -273,54 +171,18 @@ const NavigationHeader = ({
               },
             },
           }}
-        >
-          {linkInfoList.map((linkInfo, index) => (
-            <Tab
-              label={intl.messages[linkInfo.label] as string}
-              key={linkInfo.label}
-              {...navigationTabProps(index)}
-              onClick={(e) => {
-                navigate(linkInfo.path);
-              }}
-            />
-          ))}
-        </Tabs>
-        <Stack
-          spacing={2}
-          marginTop="1.6rem"
-          sx={{
-            "& .MuiButtonBase-root": {
-              fontSize: "2.4rem",
-              fontWeight: 600,
-              "&.MuiButton-outlinedPrimary": {
-                borderWidth: "2px",
-              },
-            },
-          }}
-        >
-          <MaptyProButton
-            size="large"
+        />
+        {currentUser === undefined && (
+          <CustomLoginButtonGroup
+            direction="column"
+            sx={{
+              marginTop: "1.6rem",
+            }}
             onClick={() => {
               setSideNavigationOpen(false);
-              dispatch(openLoginPage(true));
-              dispatch(switchMode(0));
             }}
-            variant="outlined"
-          >
-            {intl.messages["navigation.login"] as string}
-          </MaptyProButton>
-          <MaptyProButton
-            size="large"
-            variant="contained"
-            onClick={() => {
-              setSideNavigationOpen(false);
-              dispatch(openLoginPage(true));
-              dispatch(switchMode(1));
-            }}
-          >
-            {intl.messages["navigation.signup"] as string}
-          </MaptyProButton>
-        </Stack>
+          />
+        )}
       </Stack>
     </>
   );
