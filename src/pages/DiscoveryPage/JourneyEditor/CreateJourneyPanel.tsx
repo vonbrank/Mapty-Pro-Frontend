@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
-import { CustomAccordion } from "../CustomComponents/CustomAccordion";
 import { CreateJourneyTextField } from "../CustomComponents/CustomTextField";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { JourneyWaypointList } from "../CustomComponents/Waypoint";
@@ -13,8 +12,8 @@ import DoneIcon from "@mui/icons-material/Done";
 import {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
-  addPersonalJourney,
   JourneyData,
+  Waypoint,
 } from "../../../Redux/JourneySlice";
 import { red } from "@mui/material/colors";
 import dayjs, { Dayjs } from "dayjs";
@@ -76,14 +75,7 @@ const CreateJourneyPanel = ({
     setNewJourneyerror(false);
   };
 
-  const handleAddNewWaypoint = (newWaypoint: {
-    label: string;
-    time: string;
-    coordinate?: {
-      lat: number;
-      lng: number;
-    };
-  }) => {
+  const handleAddNewWaypoint = (newWaypoint: Waypoint) => {
     setNewJourneyData({
       ...newJourneyData,
       waypointList: [newWaypoint, ...newJourneyData.waypointList],
@@ -199,15 +191,6 @@ const CreateJourneyPanel = ({
     </Collapse>
   );
 };
-
-interface Waypoint {
-  label: string;
-  time: string;
-  coordinate?: {
-    lat: number;
-    lng: number;
-  };
-}
 
 const CreateWaypointPanel = ({
   newWaypoint,

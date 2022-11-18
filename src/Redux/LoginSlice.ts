@@ -60,6 +60,7 @@ export const login = (loginData: { username: string; password: string }) => {
         timestamp: string;
         data?: {
           username: string;
+          password: string;
           email: string;
         };
       } = axiosRes.data;
@@ -69,6 +70,32 @@ export const login = (loginData: { username: string; password: string }) => {
       }
       // console.log(`[Login Slice] login res data = `, res);
     } catch (error) {}
+  };
+};
+
+export const createAccount = (accountdata: {
+  username: string;
+  email: string;
+  password: string;
+}) => {
+  return async (dispath: AppDispatch) => {
+    const axiosRes = await Axios.post("/register", {
+      ...accountdata,
+    });
+    const res: {
+      code: Number;
+      description: string;
+      timestamp: string;
+      data?: {
+        id: Number;
+        username: string;
+        password: string;
+        email: string;
+      };
+    } = axiosRes.data;
+    if (res.code === 200) {
+      dispath(switchMode(LoginPageModes[0].index));
+    }
   };
 };
 

@@ -14,6 +14,15 @@ export interface JourneyData {
   }[];
 }
 
+export interface Waypoint {
+  label: string;
+  time: string;
+  coordinate?: {
+    lat: number;
+    lng: number;
+  };
+}
+
 export interface UniqueJourneyData extends JourneyData {
   journeyId: string;
 }

@@ -61,13 +61,13 @@ export const LanguageSwitch = ({
       >
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => handleChangeLocale(LOCALES.ENGLISH)}>
-              <ListItemText primary="English" sx={{ textAlign: "center" }} />
+            <ListItemButton onClick={() => handleChangeLocale(LOCALES.CHINESE)}>
+              <ListItemText primary="中文" sx={{ textAlign: "center" }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => handleChangeLocale(LOCALES.CHINESE)}>
-              <ListItemText primary="中文" sx={{ textAlign: "center" }} />
+            <ListItemButton onClick={() => handleChangeLocale(LOCALES.ENGLISH)}>
+              <ListItemText primary="English" sx={{ textAlign: "center" }} />
             </ListItemButton>
           </ListItem>
         </List>

@@ -5,7 +5,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { MaptyProButton } from "../../components/CommonButton";
 import ProfileCard from "./CustomComponents/ProfileCard";
 import {
@@ -13,10 +13,23 @@ import {
   JourneyCard,
   JourneyRecommendationList,
 } from "../../components/CommonCard";
+import { useAppSelector } from "../../Redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
 
+  const { currentUser } = useAppSelector((state) => ({
+    currentUser: state.login.currentUser,
+  }));
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser === undefined) {
+      navigate("/");
+    }
+  }, [currentUser]);
 
   return (
     <Box
