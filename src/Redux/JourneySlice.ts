@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import Axios from "../Utils/Axios";
+import { AppDispatch } from "./store";
 
 export interface JourneyData {
   title: string;
@@ -108,6 +110,13 @@ export const journeySlice = createSlice({
         JSON.stringify(state.personnal.jourenyList)
       );
     },
+    setPersonalJourney: (state, action: PayloadAction<UniqueJourneyData[]>) => {
+      state.personnal.jourenyList = action.payload;
+      localStorage.setItem(
+        "personalJourneyList",
+        JSON.stringify(state.personnal.jourenyList)
+      );
+    },
     getDataFromLocalStorage: (state) => {
       const personalJourneyListJson = localStorage.getItem(
         "personalJourneyList"
@@ -134,12 +143,70 @@ export const journeySlice = createSlice({
   },
 });
 
+export const getUserJourneyData = (accountdata: {
+  username: string;
+  password: string;
+}) => {
+  return async (dispatch: AppDispatch) => {
+    const axiosRes = await Axios.get("/journey/getByUser", {
+      headers: {
+        username: accountdata.username,
+        password: accountdata.password,
+      },
+    });
+    const res: {
+      code: Number;
+      description: string;
+      timestamp: string;
+      data?: {
+        id: Number;
+        title: string;
+        description: string;
+        waypoints: {
+          label: string;
+          time: string;
+          coordinate: string;
+        }[];
+      }[];
+    } = axiosRes.data;
+    if (res.code === 200 && res.data !== undefined) {
+      const jourenyList = res.data;
+      dispatch(
+        setPersonalJourney(
+          jourenyList.map((jouorney) => {
+            return {
+              journeyId: `${jouorney.id}`,
+              title: jouorney.title,
+              description: jouorney.description,
+              waypointList: jouorney.waypoints.map((waypoint) => {
+                return {
+                  label: waypoint.label,
+                  time: waypoint.time,
+                  coordinate: {
+                    lat: +waypoint.coordinate
+                      .substring(1, waypoint.coordinate.length - 1)
+                      .split(", ")[0],
+                    lng: +waypoint.coordinate
+                      .substring(1, waypoint.coordinate.length - 1)
+                      .split(", ")[1],
+                  },
+                };
+              }),
+            };
+          })
+        )
+      );
+    }
+  };
+};
+
 export const {
   handleSelectNewCoordinate,
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
   getDataFromLocalStorage,
   removePersonalJourney,
+  setPersonalJourney,
 } = journeySlice.actions;
 
 export default journeySlice.reducer;
