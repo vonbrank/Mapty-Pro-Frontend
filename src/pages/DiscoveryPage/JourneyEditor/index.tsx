@@ -9,14 +9,16 @@ import {
   setWaypoinsDisplayOnMap,
   addPersonalJourney,
   removePersonalJourney,
+  createNewJourney,
 } from "../../../Redux/JourneySlice";
 import AddIcon from "@mui/icons-material/Add";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 const JourneyEditor = () => {
   const dispatch = useAppDispatch();
-  const { journeyDataList } = useAppSelector((state) => ({
+  const { journeyDataList, currentUser } = useAppSelector((state) => ({
     journeyDataList: state.journey.personnal.jourenyList,
+    currentUser: state.login.currentUser,
   }));
 
   const [journeyAccordionList, setJourneyAccordionList] = useState(
@@ -82,7 +84,16 @@ const JourneyEditor = () => {
   };
 
   const handleCreateJourneySubmit = (newJourneyData: JourneyData) => {
-    dispatch(addPersonalJourney(newJourneyData));
+    if (currentUser == undefined) return;
+    dispatch(
+      createNewJourney(
+        {
+          username: currentUser.username,
+          password: currentUser.password,
+        },
+        newJourneyData
+      )
+    );
     setCreateJourneyOpen(false);
     dispatch(setWaypoinsDisplayOnMap([]));
   };

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import {
   getDataFromLocalStorage,
   getUserJourneyData,
+  setPersonalJourney,
 } from "../../Redux/JourneySlice";
 
 const DiscoveryPage = () => {
@@ -22,13 +23,16 @@ const DiscoveryPage = () => {
   }));
 
   useEffect(() => {
-    if (currentUser == undefined) return;
-    dispatch(
-      getUserJourneyData({
-        username: currentUser.username,
-        password: "",
-      })
-    );
+    if (currentUser == undefined) {
+      dispatch(setPersonalJourney([]));
+    } else {
+      dispatch(
+        getUserJourneyData({
+          username: currentUser.username,
+          password: currentUser.password,
+        })
+      );
+    }
   }, [currentUser]);
 
   return (

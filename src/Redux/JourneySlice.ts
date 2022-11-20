@@ -84,7 +84,7 @@ export const journeySlice = createSlice({
       >
     ) => {
       state.waypointsDisplayOnMap = action.payload
-        .filter((waypoint) => waypoint.coordinate != undefined)
+        .filter((waypoint) => waypoint.coordinate !== undefined)
         .map(
           (waypoint) =>
             waypoint as {
@@ -148,55 +148,107 @@ export const getUserJourneyData = (accountdata: {
   password: string;
 }) => {
   return async (dispatch: AppDispatch) => {
-    const axiosRes = await Axios.get("/journey/getByUser", {
-      headers: {
-        username: accountdata.username,
-        password: accountdata.password,
-      },
-    });
-    const res: {
-      code: Number;
-      description: string;
-      timestamp: string;
-      data?: {
-        id: Number;
-        title: string;
+    try {
+      const axiosRes = await Axios.get("/journey/getByUser", {
+        headers: {
+          username: accountdata.username,
+          password: accountdata.password,
+        },
+      });
+      const res: {
+        code: Number;
         description: string;
-        waypoints: {
-          label: string;
-          time: string;
-          coordinate: string;
+        timestamp: string;
+        data?: {
+          id: Number;
+          title: string;
+          description: string;
+          waypoints: {
+            label: string;
+            time: string;
+            coordinate: string;
+          }[];
         }[];
-      }[];
-    } = axiosRes.data;
-    if (res.code === 200 && res.data !== undefined) {
-      const jourenyList = res.data;
-      dispatch(
-        setPersonalJourney(
-          jourenyList.map((jouorney) => {
-            return {
-              journeyId: `${jouorney.id}`,
-              title: jouorney.title,
-              description: jouorney.description,
-              waypointList: jouorney.waypoints.map((waypoint) => {
-                return {
-                  label: waypoint.label,
-                  time: waypoint.time,
-                  coordinate: {
-                    lat: +waypoint.coordinate
-                      .substring(1, waypoint.coordinate.length - 1)
-                      .split(", ")[0],
-                    lng: +waypoint.coordinate
-                      .substring(1, waypoint.coordinate.length - 1)
-                      .split(", ")[1],
-                  },
-                };
-              }),
-            };
-          })
-        )
-      );
-    }
+      } = axiosRes.data;
+      if (res.code === 200 && res.data !== undefined) {
+        const jourenyList = res.data;
+        dispatch(
+          setPersonalJourney(
+            jourenyList.map((jouorney) => {
+              return {
+                journeyId: `${jouorney.id}`,
+                title: jouorney.title,
+                description: jouorney.description,
+                waypointList: jouorney.waypoints.map((waypoint) => {
+                  return {
+                    label: waypoint.label,
+                    time: waypoint.time,
+                    coordinate: {
+                      lat: +waypoint.coordinate
+                        .substring(1, waypoint.coordinate.length - 1)
+                        .split(", ")[0],
+                      lng: +waypoint.coordinate
+                        .substring(1, waypoint.coordinate.length - 1)
+                        .split(", ")[1],
+                    },
+                  };
+                }),
+              };
+            })
+          )
+        );
+      }
+    } catch (error) {}
+  };
+};
+
+export const createNewJourney = (
+  accountdata: {
+    username: string;
+    password: string;
+  },
+  newJourney: JourneyData
+) => {
+  const dataToPost: {
+    title: string;
+    description: string;
+    usrId: Number;
+    waypoints: {
+      label: string;
+      time: string;
+      coordinate: string;
+    }[];
+  } = {
+    title: newJourney.title,
+    description: newJourney.description,
+    usrId: 0,
+    waypoints: newJourney.waypointList.map((waypoint) => ({
+      label: waypoint.label,
+      time: waypoint.time,
+      coordinate: `(${waypoint.coordinate?.lat || 0}, ${
+        waypoint.coordinate?.lng || 0
+      })`,
+    })),
+  };
+
+  return async (dispatch: AppDispatch) => {
+    try {
+      const axiosRes = await Axios.post("/journey/create", dataToPost, {
+        headers: {
+          username: accountdata.username,
+          password: accountdata.password,
+        },
+      });
+      const res: {
+        code: Number;
+        description: string;
+        timestamp: string;
+        data?: any;
+      } = axiosRes.data;
+      if (res.code === 200) {
+        dispatch(getUserJourneyData(accountdata));
+      }
+    } catch (error) {}
   };
 };
 

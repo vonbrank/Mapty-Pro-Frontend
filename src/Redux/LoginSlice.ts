@@ -13,12 +13,16 @@ interface LoginState {
     mode: LoginPageModeType;
     loginPageOpen: boolean;
   };
-  currentUser?: UserBase;
+  currentUser?: UserAuth;
 }
 
 interface UserBase {
   username: string;
   email: string;
+}
+
+interface UserAuth extends UserBase {
+  password: string;
 }
 
 const LoginPageModes: LoginPageModeType[] = ["login", "create-account"].map(
@@ -42,13 +46,13 @@ export const loginSlice = createSlice({
     openLoginPage: (state, action: PayloadAction<boolean>) => {
       state.loginPage.loginPageOpen = action.payload;
     },
-    setCurrentUser: (state, action: PayloadAction<UserBase | undefined>) => {
+    setCurrentUser: (state, action: PayloadAction<UserAuth | undefined>) => {
       state.currentUser = action.payload;
     },
   },
 });
 
-export const login = (loginData: { username: string; password: string }) => {
+export const login = (loginData: UserAuth) => {
   return async (dispath: AppDispatch) => {
     try {
       const axiosRes = await Axios.post("/login", {
@@ -58,11 +62,7 @@ export const login = (loginData: { username: string; password: string }) => {
         code: Number;
         description: string;
         timestamp: string;
-        data?: {
-          username: string;
-          password: string;
-          email: string;
-        };
+        data?: UserAuth;
       } = axiosRes.data;
       if (res.code === 200) {
         dispath(setCurrentUser(res.data));

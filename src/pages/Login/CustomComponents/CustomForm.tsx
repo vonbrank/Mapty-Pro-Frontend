@@ -11,7 +11,13 @@ const LoginForm = () => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement> | undefined) => {
     e?.preventDefault();
-    dispatch(login({ username: fullNameOrEmail, password: password }));
+    dispatch(
+      login({
+        username: fullNameOrEmail,
+        email: fullNameOrEmail,
+        password: password,
+      })
+    );
   };
 
   return (
