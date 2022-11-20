@@ -1,8 +1,10 @@
 import { Paper, Stack, Box, Typography, useMediaQuery } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { ReactComponent as ProfilePhotoPlaceholder } from "../../../assets/ProfilePhotoPlaceholder.svg";
 import { useAppSelector } from "../../../Redux/hooks";
+import { MaptyProTextField } from "../../../components/CommonTextField";
+import { ProfileCardTextField } from "./CustomTextField";
 
 const ProfileCard = ({ className }: { className?: string }) => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
@@ -10,6 +12,17 @@ const ProfileCard = ({ className }: { className?: string }) => {
   const { currentUser } = useAppSelector((state) => ({
     currentUser: state.login.currentUser,
   }));
+
+  const [editMode, setEditMode] = useState(false);
+
+  const [editUsername, setEditUsername] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+
+  const handleEdit = () => {
+    setEditUsername(currentUser?.username || "");
+    setEditEmail(currentUser?.email || "");
+    setEditMode(true);
+  };
 
   return (
     <Paper
@@ -53,14 +66,34 @@ const ProfileCard = ({ className }: { className?: string }) => {
         <Box className="Profile-Card__profile-photo-box">
           <ProfilePhotoPlaceholder />
         </Box>
-        <Typography className="Profile-Card__full-name">
-          {currentUser?.username}
-        </Typography>
-        <Typography className="Profile-Card__email">
-          {currentUser?.email
-            ? currentUser?.email
-            : "Want to bind your email addres? Click here."}
-        </Typography>
+        {!editMode ? (
+          <>
+            <Typography className="Profile-Card__full-name">
+              {currentUser?.username}
+            </Typography>
+            <Typography className="Profile-Card__email">
+              {currentUser?.email
+                ? currentUser?.email
+                : "Want to bind your email addres? Click here."}
+            </Typography>
+          </>
+        ) : (
+          <>
+            <ProfileCardTextField
+              value={editUsername}
+              onChange={(e) => setEditUsername(e.target.value)}
+              label="Username"
+              size="small"
+            />
+            <ProfileCardTextField
+              value={editEmail}
+              onChange={(e) => setEditEmail(e.target.value)}
+              label="Email"
+              size="small"
+            />
+          </>
+        )}
+
         <Stack
           justifyContent="space-between"
           alignItems="center"
@@ -74,9 +107,26 @@ const ProfileCard = ({ className }: { className?: string }) => {
           </Typography>
         </Stack>
         <Stack spacing="1.2rem" className="Profile-Card__button-group">
-          <MaptyProButton variant="contained" fullWidth>
-            Edit
-          </MaptyProButton>
+          {!editMode ? (
+            <MaptyProButton variant="contained" fullWidth onClick={handleEdit}>
+              Edit
+            </MaptyProButton>
+          ) : (
+            <>
+              <Stack direction={"row"} spacing="1.8rem">
+                <MaptyProButton
+                  variant="contained"
+                  fullWidth
+                  onClick={() => setEditMode(false)}
+                >
+                  Cancel
+                </MaptyProButton>
+                <MaptyProButton variant="contained" fullWidth>
+                  Update
+                </MaptyProButton>
+              </Stack>
+            </>
+          )}
           <MaptyProButton variant="contained" fullWidth>
             Change Password
           </MaptyProButton>
