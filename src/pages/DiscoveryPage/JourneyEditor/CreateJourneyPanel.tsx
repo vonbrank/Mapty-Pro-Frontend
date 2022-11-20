@@ -92,20 +92,22 @@ const CreateJourneyPanel = ({
   });
 
   useEffect(() => {
-    if (createJourneyOpen)
-      setNewWaypoint({
-        ...newWaypoint,
-        coordinate: newSelectCoordinate,
-      });
+    setNewWaypoint({
+      ...newWaypoint,
+      coordinate: newSelectCoordinate,
+    });
   }, [newSelectCoordinate]);
 
   useEffect(() => {
-    dispatch(
-      setWaypoinsDisplayOnMap([newWaypoint, ...newJourneyData.waypointList])
-    );
-  }, [newWaypoint]);
-
-  // console.log(`[Create new journey pannel] new waypoint: `, newWaypoint);
+    if (createJourneyOpen) {
+      dispatch(
+        setWaypoinsDisplayOnMap([newWaypoint, ...newJourneyData.waypointList])
+      );
+    } else {
+      dispatch(setWaypoinsDisplayOnMap([]));
+      dispatch(handleSelectNewCoordinate(undefined));
+    }
+  }, [createJourneyOpen, newWaypoint]);
 
   return (
     <Collapse in={createJourneyOpen}>
