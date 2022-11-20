@@ -7,6 +7,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
@@ -34,6 +35,7 @@ const AboutPage = () => {
           },
           "&-text-content": {
             fontSize: "1.8rem",
+            color: grey[700],
           },
           "&-link": {
             color: theme.palette.primary.main,
@@ -45,7 +47,7 @@ const AboutPage = () => {
               position: "absolute",
               bottom: "-2px",
               left: 0,
-              height: "1px",
+              height: "1.5px",
               width: 0,
               transition: "width 0.3s",
               backgroundColor: theme.palette.primary.main,

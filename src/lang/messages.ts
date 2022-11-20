@@ -57,7 +57,7 @@ export const messages: {
     },
     about: {
       introduction:
-        "本项目受 <link>Mapty</link> 启发（一款由 <link>Jonas Schmedtmann</link> 设计的、用于讲授如何使用 JavaScript 创建 Web 地图应用），为满足哈尔滨工业大学软件工程专业课程：<link>[CS33461: Service-Oriented Software Systems]</link> 的大作业需求而开发，我们将其命名为 <link>Mapty Pro</link> 。 Mapty Pro 是对 Mapty 的全面升级，不仅包含基础的地图功能，我们还提供后端支持，并将登录、分享等内容服务部署在我们的服务器。",
+        "为满足哈尔滨工业大学软件工程专业课程：<link>【CS33461: 面向服务的软件系统】</link> 大作业的需求，我们设计并实现了这款 Web 应用，并将其命名为 <link>Mapty Pro</link> 。本项目受 <link>Mapty</link> 启发（一款由 <link>Jonas Schmedtmann</link> 设计的、用于讲授如何使用 JavaScript 管理与操作地图库的 Web 应用），是对 Mapty 的全面升级，不仅包含基础的地图功能，还提供后端支持，包括登录、分享等服务。这些内容均部署在我们的后端服务器。",
       headings: {
         primary: "关于我们",
         contributors: "贡献者",
