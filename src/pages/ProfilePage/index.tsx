@@ -19,8 +19,9 @@ import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
 
-  const { currentUser } = useAppSelector((state) => ({
+  const { currentUser, jourenyList } = useAppSelector((state) => ({
     currentUser: state.login.currentUser,
+    jourenyList: state.journey.personnal.jourenyList,
   }));
 
   const navigate = useNavigate();
@@ -76,8 +77,18 @@ const ProfilePage = () => {
               </MaptyProButton>
             </Stack>
             <Stack spacing="3rem" marginTop="3.6rem">
-              {JourneyRecommendationList.map((journeyBriefInfo, index) => (
-                <JourneyCard key={index} {...journeyBriefInfo} />
+              {jourenyList.map((journey, index) => (
+                <JourneyCard
+                  key={journey.journeyId}
+                  title={journey.title}
+                  content={journey.description}
+                  imgSrc={
+                    JourneyRecommendationList[
+                      index % JourneyRecommendationList.length
+                    ].imgSrc
+                  }
+                  waypoints={journey.waypointList}
+                />
               ))}
             </Stack>
           </Box>

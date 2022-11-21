@@ -84,12 +84,14 @@ const ProfileCard = ({ className }: { className?: string }) => {
               onChange={(e) => setEditUsername(e.target.value)}
               label="Username"
               size="small"
+              fullWidth
             />
             <ProfileCardTextField
               value={editEmail}
               onChange={(e) => setEditEmail(e.target.value)}
               label="Email"
               size="small"
+              fullWidth
             />
           </>
         )}

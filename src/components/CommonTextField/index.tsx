@@ -10,7 +10,7 @@ export const MaptyProTextField = styled(TextField)(({ theme }) => ({
     },
   },
   "& .MuiOutlinedInput-root": {
-    color: "#fff",
+    color: grey[700],
     "& fieldset": {
       borderColor: grey[500],
     },
