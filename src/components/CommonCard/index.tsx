@@ -148,6 +148,15 @@ const JourneyCard = ({
           <Box sx={{ height: "36rem" }}>
             <MapExample />
           </Box>
+          <Typography
+            sx={{
+              marginY: "1.6rem",
+              fontSize: "1.8rem",
+              color: grey[900],
+            }}
+          >
+            {content}
+          </Typography>
           <Box>
             <JourneyWaypointList
               waypointList={waypoints.map((waypoint) => ({
@@ -156,7 +165,7 @@ const JourneyCard = ({
               }))}
               sx={{
                 "& .MuiTypography-root": {
-                  color: grey[700],
+                  color: grey[800],
                 },
               }}
             />

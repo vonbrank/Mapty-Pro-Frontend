@@ -7,22 +7,27 @@ import {
   Typography,
   IconButton,
   Stack,
+  BoxProps,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 type MaptyProModalProps = ModalProps & {
   title: string;
   handleClose?: () => void;
+  boxProps?: BoxProps;
 };
 
 export const MaptyProModal = ({
-  children = <></>,
   open = false,
   handleClose = () => {},
   title = "",
+  boxProps = {},
+  ...modalProps
 }: MaptyProModalProps) => {
+  const { sx: boxSx, ...boxPropsOthers } = boxProps;
+  const { children, ...modalPropsOthers } = modalProps;
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose} {...modalPropsOthers}>
       <Fade in={open}>
         <Box
           sx={{
@@ -34,7 +39,9 @@ export const MaptyProModal = ({
             height: "64rem",
             maxWidth: "100vw",
             maxHeight: "calc(100vh - 12.8rem)",
+            ...boxSx,
           }}
+          {...boxPropsOthers}
         >
           <Stack
             sx={{

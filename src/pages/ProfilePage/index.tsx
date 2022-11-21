@@ -13,8 +13,12 @@ import {
   JourneyCard,
   JourneyRecommendationList,
 } from "../../components/CommonCard";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { useNavigate } from "react-router-dom";
+import {
+  getUserJourneyData,
+  setPersonalJourney,
+} from "../../Redux/JourneySlice";
 
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
@@ -24,6 +28,7 @@ const ProfilePage = () => {
     jourenyList: state.journey.personnal.jourenyList,
   }));
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +36,19 @@ const ProfilePage = () => {
       navigate("/");
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser == undefined) {
+      dispatch(setPersonalJourney([]));
+    } else {
+      dispatch(
+        getUserJourneyData({
+          username: currentUser.username,
+          password: currentUser.password,
+        })
+      );
+    }
+  }, [currentUser, dispatch]);
 
   return (
     <Box

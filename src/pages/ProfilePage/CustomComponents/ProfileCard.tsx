@@ -5,12 +5,14 @@ import { ReactComponent as ProfilePhotoPlaceholder } from "../../../assets/Profi
 import { useAppSelector } from "../../../Redux/hooks";
 import { MaptyProTextField } from "../../../components/CommonTextField";
 import { ProfileCardTextField } from "./CustomTextField";
+import { MaptyProModal } from "../../../components/CommonModal";
 
 const ProfileCard = ({ className }: { className?: string }) => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
   const minWidth600 = useMediaQuery("(min-width:600px)");
-  const { currentUser } = useAppSelector((state) => ({
+  const { currentUser, journeyDataList } = useAppSelector((state) => ({
     currentUser: state.login.currentUser,
+    journeyDataList: state.journey.personnal.jourenyList,
   }));
 
   const [editMode, setEditMode] = useState(false);
@@ -23,6 +25,8 @@ const ProfileCard = ({ className }: { className?: string }) => {
     setEditEmail(currentUser?.email || "");
     setEditMode(true);
   };
+
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
 
   return (
     <Paper
@@ -102,7 +106,7 @@ const ProfileCard = ({ className }: { className?: string }) => {
           className="Profile-Card__journey-number"
         >
           <Typography className="Profile-Card__journey-number-num">
-            12
+            {journeyDataList.length}
           </Typography>
           <Typography className="Profile-Card__journey-number-text">
             Journeys
@@ -129,11 +133,37 @@ const ProfileCard = ({ className }: { className?: string }) => {
               </Stack>
             </>
           )}
-          <MaptyProButton variant="contained" fullWidth>
-            Change Password
+          <MaptyProButton
+            variant="contained"
+            onClick={() => setResetPasswordOpen(true)}
+            fullWidth
+          >
+            Reset Password
           </MaptyProButton>
         </Stack>
       </Stack>
+      <MaptyProModal
+        open={resetPasswordOpen}
+        handleClose={() => setResetPasswordOpen(false)}
+        title="Reset your password"
+        boxProps={{
+          sx: {
+            height: "auto",
+          },
+        }}
+      >
+        <Stack spacing="1.6rem" marginTop="2.4rem">
+          <MaptyProTextField label="Old password" fullWidth />
+          <MaptyProTextField label="New password" fullWidth />
+          <MaptyProTextField label="Confirm new password" fullWidth />
+          <Stack direction={"row"} justifyContent="flex-end" spacing="1.6rem">
+            <MaptyProButton onClick={() => setResetPasswordOpen(false)}>
+              Cancel
+            </MaptyProButton>
+            <MaptyProButton variant="contained">Update</MaptyProButton>
+          </Stack>
+        </Stack>
+      </MaptyProModal>
     </Paper>
   );
 };

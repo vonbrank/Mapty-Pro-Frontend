@@ -33,7 +33,7 @@ const DiscoveryPage = () => {
         })
       );
     }
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
   return (
     <Container
