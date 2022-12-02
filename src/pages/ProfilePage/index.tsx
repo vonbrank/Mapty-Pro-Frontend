@@ -32,12 +32,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentUser === undefined) {
-      navigate("/");
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
     if (currentUser == undefined) {
       dispatch(setPersonalJourney([]));
     } else {

@@ -53,15 +53,6 @@ const NavigationHeader = ({
 
   const intl = useIntl();
 
-  useEffect(() => {
-    dispatch(
-      setTabVisible({
-        label: "navigation.profile",
-        newValue: currentUser !== undefined,
-      })
-    );
-  }, [currentUser]);
-
   return (
     <>
       <Paper sx={{ zIndex: 1300, position: "relative" }}>
