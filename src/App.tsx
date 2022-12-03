@@ -8,6 +8,7 @@ import { grey } from "@mui/material/colors";
 import Login from "./pages/Login";
 import { IntlProvider } from "react-intl";
 import { LOCALES, messages, flattenMessages } from "./lang";
+import { MaptyProToast } from "./components/CommonSnackBar";
 
 function App() {
   const [locale, setLocale] = useState(LOCALES.CHINESE);
@@ -37,6 +38,7 @@ function App() {
             <Outlet />
           </Box>
           <NavigationFooter />
+          <MaptyProToast />
         </Stack>
       </IntlProvider>
     </>

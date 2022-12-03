@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Axios from "../Utils/Axios";
 import { AppDispatch } from "./store";
 import { setTabVisible } from "./NavigationSlice";
+import { showTemporaryToastText } from "./ToastSlice";
 
 interface LoginPageModeType {
   name: string;
@@ -64,12 +65,32 @@ export const login = (loginData: UserAuth) => {
         timestamp: string;
         data?: UserAuth;
       } = axiosRes.data;
-      if (res.code === 200) {
+      if (res?.code === 200) {
         dispath(setCurrentUser(res.data));
         dispath(openLoginPage(false));
+        dispath(
+          showTemporaryToastText({
+            severity: "success",
+            message: "Login successfully.",
+          })
+        );
+      } else if (res?.code === 400) {
+        dispath(
+          showTemporaryToastText({
+            severity: "error",
+            message: res.description,
+          })
+        );
       }
-      // console.log(`[Login Slice] login res data = `, res);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      dispath(
+        showTemporaryToastText({
+          severity: "error",
+          message: `${error}`,
+        })
+      );
+    }
   };
 };
 

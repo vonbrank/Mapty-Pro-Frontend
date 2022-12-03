@@ -11,12 +11,11 @@ import {
   IconButton,
 } from "@mui/material";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import {
-  MaptyProToast,
-  TransitionGroupExample,
-} from "../../components/CommonSnackBar";
+import { MaptyProToast } from "../../components/CommonSnackBar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TransitionGroup } from "react-transition-group";
+import { useAppDispatch } from "../../Redux/hooks";
+import { showTemporaryToastText } from "../../Redux/ToastSlice";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -45,11 +44,7 @@ export function CustomizedSnackbars({
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
-      <Snackbar
-        open={open}
-        //   autoHideDuration={6000}
-        onClose={handleClose}
-      >
+      <Snackbar open={open} onClose={handleClose}>
         <Box>
           <Stack spacing={1}>
             <Alert
@@ -74,13 +69,19 @@ export function CustomizedSnackbars({
 }
 
 const TestPage = () => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
+  const dispatch = useAppDispatch();
+  const handleAddAlert = () => {
+    dispatch(
+      showTemporaryToastText({
+        message: "This is a success message!",
+      })
+    );
   };
   return (
     <>
+      <Button variant="outlined" onClick={handleAddAlert}>
+        Open success snackbar
+      </Button>
       <MaptyProToast />
     </>
   );

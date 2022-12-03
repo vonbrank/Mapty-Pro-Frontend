@@ -45,7 +45,7 @@ const Login = () => {
     <Box
       sx={{
         position: "fixed",
-        zIndex: 1500,
+        zIndex: 1301,
         width: "100%",
         height: "100vh",
         overflowY: "overlay",
