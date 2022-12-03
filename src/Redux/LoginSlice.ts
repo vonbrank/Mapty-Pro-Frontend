@@ -9,12 +9,15 @@ interface LoginPageModeType {
   index: number;
 }
 
+export type LoginStage = "idle" | "logging" | "success" | "error";
+
 interface LoginState {
   loginPage: {
     mode: LoginPageModeType;
     loginPageOpen: boolean;
   };
   currentUser?: UserAuth;
+  loginStage: LoginStage;
 }
 
 interface UserBase {
@@ -35,6 +38,7 @@ const initialState: LoginState = {
     mode: LoginPageModes[0],
     loginPageOpen: false,
   },
+  loginStage: "idle",
 };
 
 export const loginSlice = createSlice({
@@ -50,12 +54,16 @@ export const loginSlice = createSlice({
     setCurrentUser: (state, action: PayloadAction<UserAuth | undefined>) => {
       state.currentUser = action.payload;
     },
+    setLoginStage: (state, action: PayloadAction<LoginStage>) => {
+      state.loginStage = action.payload;
+    },
   },
 });
 
 export const login = (loginData: UserAuth) => {
   return async (dispath: AppDispatch) => {
     try {
+      dispath(setLoginStage("logging"));
       const axiosRes = await Axios.post("/login", {
         ...loginData,
       });
@@ -74,6 +82,7 @@ export const login = (loginData: UserAuth) => {
             message: "Login successfully.",
           })
         );
+        dispath(setLoginStage("success"));
       } else if (res?.code === 400) {
         dispath(
           showTemporaryToastText({
@@ -81,6 +90,7 @@ export const login = (loginData: UserAuth) => {
             message: res.description,
           })
         );
+        dispath(setLoginStage("error"));
       }
     } catch (error) {
       console.error(error);
@@ -90,6 +100,7 @@ export const login = (loginData: UserAuth) => {
           message: `${error}`,
         })
       );
+      dispath(setLoginStage("error"));
     }
   };
 };
@@ -120,6 +131,7 @@ export const createAccount = (accountdata: {
   };
 };
 
-export const { switchMode, openLoginPage, setCurrentUser } = loginSlice.actions;
+export const { switchMode, openLoginPage, setCurrentUser, setLoginStage } =
+  loginSlice.actions;
 
 export default loginSlice.reducer;

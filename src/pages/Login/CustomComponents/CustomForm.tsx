@@ -1,13 +1,20 @@
 import { Stack, TextField, Box } from "@mui/material";
-import React, { useState } from "react";
-import { MaptyProButton } from "../../../components/CommonButton";
-import { useAppDispatch } from "../../../Redux/hooks";
-import { login, createAccount } from "../../../Redux/LoginSlice";
+import React, { useState, useEffect } from "react";
+import {
+  MaptyProButton,
+  MaptyProLoadingButton,
+} from "../../../components/CommonButton";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
+import { login, createAccount, setLoginStage } from "../../../Redux/LoginSlice";
 
 const LoginForm = () => {
   const [fullNameOrEmail, setFullNameOrEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginButtonLoading, setLoginButtonLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const { loginStage } = useAppSelector((state) => ({
+    loginStage: state.login.loginStage,
+  }));
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement> | undefined) => {
     e?.preventDefault();
@@ -19,6 +26,16 @@ const LoginForm = () => {
       })
     );
   };
+
+  useEffect(() => {
+    // console.log("[Login Form] login stage = ", loginStage);
+    setLoginButtonLoading(loginStage === "logging");
+    if (loginStage === "success" || loginStage === "error") {
+      dispatch(setLoginStage("idle"));
+      setFullNameOrEmail("");
+      setPassword("");
+    }
+  }, [loginStage]);
 
   return (
     <Box marginTop="7.2rem">
@@ -36,9 +53,13 @@ const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <MaptyProButton type="submit" variant="contained">
+          <MaptyProLoadingButton
+            loading={loginButtonLoading}
+            type="submit"
+            variant="contained"
+          >
             Login
-          </MaptyProButton>
+          </MaptyProLoadingButton>
         </Stack>
       </form>
     </Box>
