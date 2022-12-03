@@ -10,6 +10,7 @@ import { ReactComponent as ProfilePhotoPlaceholder } from "../../assets/ProfileP
 import { current } from "@reduxjs/toolkit";
 import { useAppSelector } from "../../Redux/hooks";
 import { MaptyProTextField } from "../CommonTextField";
+import { useIntl } from "react-intl";
 
 interface JourneyBriefInfo {
   title: string;
@@ -83,6 +84,8 @@ const JourneyCard = ({
   }));
   const [openMore, setOpenMore] = useState(false);
 
+  const { formatMessage } = useIntl();
+
   return (
     <Paper
       elevation={2}
@@ -135,7 +138,7 @@ const JourneyCard = ({
             {content}
           </Typography>
           <MaptyProButton variant="outlined" onClick={() => setOpenMore(true)}>
-            More
+            {formatMessage({ id: "journey.journeyCard.moreButtonText" })}
           </MaptyProButton>
         </Box>
       </Stack>

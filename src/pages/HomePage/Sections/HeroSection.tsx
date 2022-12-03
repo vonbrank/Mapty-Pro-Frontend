@@ -7,6 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const HeroSection = () => {
   const minWidth768 = useMediaQuery("(min-width:768px)");
@@ -60,14 +61,23 @@ const HeroSection = () => {
       <Container>
         <Stack spacing="2.4rem" className="Home-Page__Heading-Primary">
           <Typography className="Home-Page__Heading-Primary--main">
-            Recording your trails in your journey
+            {/* Recording your trails in your journey */}
+            <FormattedMessage
+              id="homePage.heroSlogen.heading"
+            />
           </Typography>
           <Typography
             component={"div"}
             className="Home-Page__Heading-Primary--sub"
           >
-            <p>From prestine water, to majectic forest -- </p>
-            <p>we've got it all</p>
+            <FormattedMessage
+              id="homePage.heroSlogen.sub"
+              values={{
+                p: (msg) => <p>{msg}</p>,
+              }}
+            />
+            {/* <p>From prestine water, to majectic forest -- </p>
+            <p>we've got it all</p> */}
           </Typography>
         </Stack>
       </Container>

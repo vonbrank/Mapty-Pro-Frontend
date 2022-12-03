@@ -14,8 +14,10 @@ import {
   JourneyCard,
   JourneyRecommendationList,
 } from "../../../components/CommonCard";
+import { useIntl } from "react-intl";
 
 const RecommendationSection = () => {
+  const { formatMessage } = useIntl();
   return (
     <Box
       sx={{
@@ -24,14 +26,20 @@ const RecommendationSection = () => {
           "&__title": {
             fontSize: "3rem",
             color: "rgba(76, 76, 76)",
+            textTransform: "uppercase",
           },
         },
       }}
     >
       <Container>
-        <Stack direction="row" spacing="2.4rem" justifyContent="center">
+        <Stack
+          direction="row"
+          spacing="2.4rem"
+          justifyContent="center"
+          alignItems={"center"}
+        >
           <Typography className="Recommendation-Section__title">
-            RECOMMENDATION
+            {formatMessage({ id: "homePage.recommendation.heading" })}
           </Typography>
           <IconButton>
             <RecommendationRefreshIcon />

@@ -2,6 +2,23 @@ import { LOCALES } from "./locales";
 
 export const messages: {
   [x: string]: {
+    homePage: {
+      heroSlogen: {
+        heading: string;
+        sub: string;
+      };
+      asFeaturedIn: {
+        heading: string;
+      };
+      features: {
+        recordingYourTails: string;
+        shareToOthers: string;
+        syncBetweenDevices: string;
+      };
+      recommendation: {
+        heading: string;
+      };
+    };
     navigation: {
       home: string;
       discovery: string;
@@ -21,9 +38,34 @@ export const messages: {
         openSource: string;
       };
     };
+    journey: {
+      journeyCard: {
+        moreButtonText: string;
+      };
+    };
+    copyright: {
+      message: string;
+    };
   };
 } = {
   [LOCALES.ENGLISH]: {
+    homePage: {
+      heroSlogen: {
+        heading: "Recording your trails in your journey",
+        sub: "<p>From prestine water, to majectic forest -- </p><p>we've got it all</p>",
+      },
+      asFeaturedIn: {
+        heading: "AS FEATURED IN",
+      },
+      features: {
+        recordingYourTails: "Recording your trails",
+        shareToOthers: "Share to others",
+        syncBetweenDevices: "Synchronize between devices",
+      },
+      recommendation: {
+        heading: "Recommendation",
+      },
+    },
     navigation: {
       home: "Home",
       discovery: "Discovery",
@@ -45,8 +87,34 @@ export const messages: {
           "This project will be open source after the course. Pull request, donation and any other ways for contribution are welcomed!",
       },
     },
+    journey: {
+      journeyCard: {
+        moreButtonText: "More",
+      },
+    },
+    copyright: {
+      message:
+        "Use for the software engineering course in Harbin Institute of Technology",
+    },
   },
   [LOCALES.CHINESE]: {
+    homePage: {
+      heroSlogen: {
+        heading: "记录您在旅程中的足迹",
+        sub: "<p>从海洋到陆地 —— 应有尽有</p>",
+      },
+      asFeaturedIn: {
+        heading: "基于以下工具构建",
+      },
+      features: {
+        recordingYourTails: "记录您的足迹",
+        shareToOthers: "分享给他人",
+        syncBetweenDevices: "跨平台同步",
+      },
+      recommendation: {
+        heading: "推荐",
+      },
+    },
     navigation: {
       home: "首页",
       discovery: "发现",
@@ -66,6 +134,14 @@ export const messages: {
       content: {
         openSource: "本项目将在晚些时候开源，欢迎提 PR 或请贡献者喝奶茶！",
       },
+    },
+    journey: {
+      journeyCard: {
+        moreButtonText: "详情",
+      },
+    },
+    copyright: {
+      message: "适用于哈尔滨工业大学软件工程专业课",
     },
   },
 };

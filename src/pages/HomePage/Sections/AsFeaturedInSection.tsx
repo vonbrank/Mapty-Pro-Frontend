@@ -6,6 +6,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React from "react";
+import { useIntl } from "react-intl";
 
 const logoList: { label: string; url: string }[][] = [
   [
@@ -45,6 +46,8 @@ const logoList: { label: string; url: string }[][] = [
 const AsFeaturedInSection = () => {
   const minWidth768 = useMediaQuery("(min-width:768px)");
 
+  const { formatMessage } = useIntl();
+
   return (
     <Box
       className="As-Feature-In-Section"
@@ -69,7 +72,7 @@ const AsFeaturedInSection = () => {
     >
       <Container>
         <Typography className="As-Feature-In-Section__heading">
-          AS FEATURED IN
+          {formatMessage({ id: "homePage.asFeaturedIn.heading" })}
         </Typography>
         <Stack spacing="5.6rem">
           {logoList.map((currentRow, index) => (
