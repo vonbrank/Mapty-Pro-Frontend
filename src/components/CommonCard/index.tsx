@@ -3,7 +3,7 @@ import { Paper, Box, Stack, Typography } from "@mui/material";
 import { MaptyProButton } from "../CommonButton";
 import { MaptyProModal } from "../CommonModal";
 import { Waypoint } from "../../Redux/JourneySlice";
-import { MapExample } from "../LeafletMap";
+import { JourneyCardMap } from "../LeafletMap";
 import { JourneyWaypointList } from "../../pages/DiscoveryPage/CustomComponents/Waypoint";
 import { grey } from "@mui/material/colors";
 import { ReactComponent as ProfilePhotoPlaceholder } from "../../assets/ProfilePhotoPlaceholder.svg";
@@ -152,7 +152,12 @@ const JourneyCard = ({
       >
         <Box marginTop={"1.2rem"}>
           <Box sx={{ height: "36rem" }}>
-            <MapExample />
+            <JourneyCardMap
+              waypointsToDisplay={waypoints.map((waypoint) => ({
+                lat: waypoint.coordinate?.lat,
+                lng: waypoint.coordinate?.lng,
+              }))}
+            />
           </Box>
           <Typography
             sx={{

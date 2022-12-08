@@ -66,6 +66,23 @@ const JourneyEditor = () => {
     );
   };
 
+  // useEffect(() => {
+  //   if (
+  //     journeyAccordionList.filter(
+  //       (journeyAccordion) => journeyAccordion.expanded
+  //     ).length === 0
+  //   ) {
+  //     let allJourneyWaypoints: Waypoint[] = [];
+  //     journeyDataList.forEach((journeyData) => {
+  //       allJourneyWaypoints = [
+  //         ...allJourneyWaypoints,
+  //         ...journeyData.waypointList,
+  //       ];
+  //     });
+  //     dispatch(setWaypoinsDisplayOnMap(allJourneyWaypoints));
+  //   }
+  // }, [journeyDataList]);
+
   const handleCreateJourneyButtonClick = () => {
     if (createJourneyOpen) {
       setCreateJourneyOpen(false);

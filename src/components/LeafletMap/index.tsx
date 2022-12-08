@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -7,7 +7,9 @@ import {
   Popup,
   LayersControl,
   useMapEvent,
+  FeatureGroup,
 } from "react-leaflet";
+import * as L from "leaflet";
 import { Box, useMediaQuery } from "@mui/material";
 import { SxProps, Theme } from "@mui/system";
 import { useEffect } from "react";
@@ -20,18 +22,16 @@ import {
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { handleSelectNewCoordinate } from "../../Redux/JourneySlice";
 import { WaypointPopUpCard } from "../../pages/DiscoveryPage/CustomComponents/Waypoint";
-// import { tileLayer } from "leaflet.chinatmsproviders";
-
-function MapExampleOperationHook() {
-  const map = useMap();
-  useEffect(() => {
-    map.attributionControl.setPosition("bottomleft");
-    map.zoomControl.remove();
-  }, []);
-  return <></>;
-}
 
 const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
+  function MapExampleOperationHook() {
+    const map = useMap();
+    useEffect(() => {
+      map.attributionControl.setPosition("bottomleft");
+      map.zoomControl.remove();
+    }, []);
+    return <></>;
+  }
   return (
     <Box
       className="LeafletMap-root"
@@ -65,17 +65,6 @@ const MapExample = ({ sx }: { sx?: SxProps<Theme> }) => {
   );
 };
 
-const MapDiscoveryOperationHook = () => {
-  const map = useMap();
-  useEffect(() => {
-    map.scrollWheelZoom.enable();
-    // tileLayer
-    //   .chinaProvider("TianDiTu.Normal.Map", { maxZoom: 18, minZoom: 5 })
-    //   .addTo(map);
-  }, []);
-  return <></>;
-};
-
 const LocationMarker = ({
   handleClickMap,
 }: {
@@ -101,6 +90,28 @@ const MapDiscovery = () => {
 
   const minWidth768 = useMediaQuery("(min-width:768px)");
 
+  const MapDiscoveryOperationHook = () => {
+    const { waypointsDisplayOnMap } = useAppSelector((state) => ({
+      waypointsDisplayOnMap: state.journey.waypointsDisplayOnMap,
+    }));
+    const map = useMap();
+    useEffect(() => {
+      map.scrollWheelZoom.enable();
+    }, []);
+    useEffect(() => {
+      if (waypointsDisplayOnMap.length === 0) return;
+      let group = new L.FeatureGroup();
+      waypointsDisplayOnMap.forEach((waypoint) => {
+        L.marker([waypoint.coordinate.lat, waypoint.coordinate.lng]).addTo(
+          group
+        );
+      });
+      map.fitBounds(group.getBounds());
+    }, [waypointsDisplayOnMap]);
+
+    return <></>;
+  };
+
   return (
     <Box
       height={minWidth768 ? "calc(100vh - 8rem)" : "calc(60vh - 8rem)"}
@@ -124,19 +135,99 @@ const MapDiscovery = () => {
         />
         <MapDiscoveryOperationHook />
         <LocationMarker handleClickMap={handleClickMap} />
-        {waypointsDisplayOnMap.map((waypoint, index) => (
-          <Marker
-            position={[waypoint.coordinate.lat, waypoint.coordinate.lng]}
-            key={index}
-          >
-            <Popup>
-              <WaypointPopUpCard label={waypoint.label} time={waypoint.time} />
-            </Popup>
-          </Marker>
-        ))}
+        <FeatureGroup>
+          {waypointsDisplayOnMap.map((waypoint, index) => (
+            <Marker
+              position={[waypoint.coordinate.lat, waypoint.coordinate.lng]}
+              key={index}
+            >
+              <Popup>
+                <WaypointPopUpCard
+                  label={waypoint.label}
+                  time={waypoint.time}
+                />
+              </Popup>
+            </Marker>
+          ))}
+        </FeatureGroup>
       </MapContainer>
     </Box>
   );
 };
 
-export { MapExample, MapDiscovery };
+const JourneyCardMap = ({
+  waypointsToDisplay,
+}: {
+  waypointsToDisplay: {
+    lat?: number;
+    lng?: number;
+  }[];
+}) => {
+  function JourneyCardMapOperationHook({
+    waypointsToDisplay,
+  }: {
+    waypointsToDisplay: {
+      lat: number;
+      lng: number;
+    }[];
+  }) {
+    const map = useMap();
+    useEffect(() => {
+      map.attributionControl.setPosition("bottomleft");
+      map.zoomControl.remove();
+      map.dragging.disable();
+    }, []);
+
+    if (waypointsToDisplay.length !== 0) {
+      let group = new L.FeatureGroup();
+      waypointsToDisplay.forEach((waypoint) => {
+        L.marker([waypoint.lat, waypoint.lng]).addTo(group);
+      });
+      map.fitBounds(group.getBounds(), { padding: [0.5, 0.5] });
+    }
+
+    return <></>;
+  }
+
+  const waypoinsToRender = waypointsToDisplay.filter(
+    (waypoint) => waypoint.lat && waypoint.lng
+  ) as {
+    lat: number;
+    lng: number;
+  }[];
+
+  return (
+    <Box
+      className="LeafletMap-root"
+      sx={{
+        width: "100%",
+        height: "100%",
+        "& .leaflet-container": {
+          width: "100%",
+          height: "100%",
+        },
+      }}
+    >
+      <MapContainer
+        center={[45.743641, 126.644855]}
+        zoom={14}
+        scrollWheelZoom={false}
+      >
+        <JourneyCardMapOperationHook waypointsToDisplay={waypoinsToRender} />
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}"
+        />
+        <FeatureGroup>
+          {waypoinsToRender
+            .filter((waypoint) => waypoint.lat && waypoint.lng)
+            .map((waypoint, index) => (
+              <Marker position={[waypoint.lat, waypoint.lng]} key={index} />
+            ))}
+        </FeatureGroup>
+      </MapContainer>
+    </Box>
+  );
+};
+
+export { MapExample, MapDiscovery, JourneyCardMap };
