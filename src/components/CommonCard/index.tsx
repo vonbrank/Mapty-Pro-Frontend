@@ -11,6 +11,8 @@ import { current } from "@reduxjs/toolkit";
 import { useAppSelector } from "../../Redux/hooks";
 import { MaptyProTextField } from "../CommonTextField";
 import { useIntl } from "react-intl";
+import { showFeatureDevelopingText } from "../../Utils";
+import { useDispatch } from "react-redux";
 
 interface JourneyBriefInfo {
   title: string;
@@ -85,6 +87,7 @@ const JourneyCard = ({
   const [openMore, setOpenMore] = useState(false);
 
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   return (
     <Paper
@@ -205,7 +208,11 @@ const JourneyCard = ({
                     <MaptyProTextField multiline rows={3} fullWidth />
                   </Box>
                   <Stack direction={"row"} justifyContent="flex-end">
-                    <MaptyProButton variant="contained" size="small">
+                    <MaptyProButton
+                      variant="contained"
+                      size="small"
+                      onClick={() => showFeatureDevelopingText(dispatch)}
+                    >
                       Commemt
                     </MaptyProButton>
                   </Stack>

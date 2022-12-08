@@ -16,6 +16,9 @@ import { JourneyData, UniqueJourneyData } from "../../../Redux/JourneySlice";
 import { blue } from "@mui/material/colors";
 import { JourneyWaypointList } from "./Waypoint";
 import { MaptyProButton } from "../../../components/CommonButton";
+import { useAppDispatch } from "../../../Redux/hooks";
+import { showTemporaryToastText } from "../../../Redux/ToastSlice";
+import { showFeatureDevelopingText } from "../../../Utils";
 
 const ConfirmDeleteDialog = ({
   open,
@@ -56,9 +59,12 @@ const CustomAccordion = ({
   journeyData: UniqueJourneyData;
   onDelete: (journeyId: string) => void;
 }) => {
+  const dispatch = useAppDispatch();
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
   const handleConfirmDelete = () => {
-    onDelete(journeyData.journeyId);
+    // onDelete(journeyData.journeyId);
+    showFeatureDevelopingText(dispatch);
+    setConfirmDeleteDialogOpen(false);
   };
 
   return (

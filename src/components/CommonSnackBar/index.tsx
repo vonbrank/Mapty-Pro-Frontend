@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Snackbar, Box, Alert, Collapse, List } from "@mui/material";
+import {
+  Button,
+  Snackbar,
+  Box,
+  Alert,
+  Collapse,
+  List,
+  useMediaQuery,
+} from "@mui/material";
 import MuiAlert, { AlertProps, AlertColor } from "@mui/material/Alert";
 import { TransitionGroup } from "react-transition-group";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -22,12 +30,13 @@ export const MaptyProToast = () => {
     } else {
       setOpen(true);
     }
-    console.log(alertList);
   }, [alertList]);
+
+  const minWidth600 = useMediaQuery("(min-width:600px)");
 
   return (
     <Snackbar open={open}>
-      <Box sx={{ mt: 1, width: "36rem" }}>
+      <Box sx={{ mt: 1, width: minWidth600 ? "36rem" : "100%" }}>
         <List>
           <TransitionGroup>
             {alertList.map((alert) => (

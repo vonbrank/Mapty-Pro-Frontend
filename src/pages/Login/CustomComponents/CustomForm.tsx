@@ -30,7 +30,7 @@ const LoginForm = () => {
   useEffect(() => {
     // console.log("[Login Form] login stage = ", loginStage);
     setLoginButtonLoading(loginStage === "logging");
-    if (loginStage === "success" || loginStage === "error") {
+    if (loginStage === "success") {
       dispatch(setLoginStage("idle"));
       setFullNameOrEmail("");
       setPassword("");

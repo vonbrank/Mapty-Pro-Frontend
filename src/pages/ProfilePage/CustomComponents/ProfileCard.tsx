@@ -6,6 +6,8 @@ import { useAppSelector } from "../../../Redux/hooks";
 import { MaptyProTextField } from "../../../components/CommonTextField";
 import { ProfileCardTextField } from "./CustomTextField";
 import { MaptyProModal } from "../../../components/CommonModal";
+import { showFeatureDevelopingText } from "../../../Utils";
+import { useDispatch } from "react-redux";
 
 const ProfileCard = ({ className }: { className?: string }) => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
@@ -14,6 +16,7 @@ const ProfileCard = ({ className }: { className?: string }) => {
     currentUser: state.login.currentUser,
     journeyDataList: state.journey.personnal.jourenyList,
   }));
+  const dispatch = useDispatch();
 
   const [editMode, setEditMode] = useState(false);
 
@@ -127,7 +130,11 @@ const ProfileCard = ({ className }: { className?: string }) => {
                 >
                   Cancel
                 </MaptyProButton>
-                <MaptyProButton variant="contained" fullWidth>
+                <MaptyProButton
+                  variant="contained"
+                  fullWidth
+                  onClick={() => showFeatureDevelopingText(dispatch)}
+                >
                   Update
                 </MaptyProButton>
               </Stack>
@@ -160,7 +167,12 @@ const ProfileCard = ({ className }: { className?: string }) => {
             <MaptyProButton onClick={() => setResetPasswordOpen(false)}>
               Cancel
             </MaptyProButton>
-            <MaptyProButton variant="contained">Update</MaptyProButton>
+            <MaptyProButton
+              variant="contained"
+              onClick={() => showFeatureDevelopingText(dispatch)}
+            >
+              Update
+            </MaptyProButton>
           </Stack>
         </Stack>
       </MaptyProModal>

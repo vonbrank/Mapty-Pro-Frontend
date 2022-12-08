@@ -110,23 +110,29 @@ export const createAccount = (accountdata: {
   email: string;
   password: string;
 }) => {
-  return async (dispath: AppDispatch) => {
-    const axiosRes = await Axios.post("/register", {
-      ...accountdata,
-    });
-    const res: {
-      code: Number;
-      description: string;
-      timestamp: string;
-      data?: {
-        id: Number;
-        username: string;
-        password: string;
-        email: string;
-      };
-    } = axiosRes.data;
-    if (res.code === 200) {
-      dispath(switchMode(LoginPageModes[0].index));
+  return async (dispatch: AppDispatch) => {
+    try {
+      const axiosRes = await Axios.post("/register", {
+        ...accountdata,
+      });
+      const res: {
+        code: Number;
+        description: string;
+        timestamp: string;
+        data?: {
+          id: Number;
+          username: string;
+          password: string;
+          email: string;
+        };
+      } = axiosRes.data;
+      if (res.code === 200) {
+        dispatch(switchMode(LoginPageModes[0].index));
+      }
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
     }
   };
 };
