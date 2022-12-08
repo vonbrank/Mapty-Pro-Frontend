@@ -10,6 +10,7 @@ interface LoginPageModeType {
 }
 
 export type LoginStage = "idle" | "logging" | "success" | "error";
+export type RegisterStage = "idle" | "registering" | "success" | "error";
 
 interface LoginState {
   loginPage: {
@@ -18,6 +19,7 @@ interface LoginState {
   };
   currentUser?: UserAuth;
   loginStage: LoginStage;
+  registerStage: RegisterStage;
 }
 
 interface UserBase {
@@ -39,6 +41,7 @@ const initialState: LoginState = {
     loginPageOpen: false,
   },
   loginStage: "idle",
+  registerStage: "idle",
 };
 
 export const loginSlice = createSlice({
@@ -56,6 +59,9 @@ export const loginSlice = createSlice({
     },
     setLoginStage: (state, action: PayloadAction<LoginStage>) => {
       state.loginStage = action.payload;
+    },
+    setRegisterStage: (state, action: PayloadAction<RegisterStage>) => {
+      state.registerStage = action.payload;
     },
   },
 });
@@ -128,16 +134,37 @@ export const createAccount = (accountdata: {
       } = axiosRes.data;
       if (res.code === 200) {
         dispatch(switchMode(LoginPageModes[0].index));
+        dispatch(
+          showTemporaryToastText({
+            severity: "success",
+            message: "Register successfully.",
+          })
+        );
+        dispatch(setRegisterStage("success"));
+      } else {
+        dispatch(
+          showTemporaryToastText({
+            severity: "error",
+            message: res.description,
+          })
+        );
+        dispatch(setRegisterStage("error"));
       }
     } catch (error) {
       dispatch(
         showTemporaryToastText({ severity: "error", message: `${error}` })
       );
+      dispatch(setRegisterStage("error"));
     }
   };
 };
 
-export const { switchMode, openLoginPage, setCurrentUser, setLoginStage } =
-  loginSlice.actions;
+export const {
+  switchMode,
+  openLoginPage,
+  setCurrentUser,
+  setLoginStage,
+  setRegisterStage,
+} = loginSlice.actions;
 
 export default loginSlice.reducer;

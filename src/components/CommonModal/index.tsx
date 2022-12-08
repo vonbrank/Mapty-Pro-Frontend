@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-type MaptyProModalProps = ModalProps & {
+export type MaptyProModalProps = ModalProps & {
   title: string;
   handleClose?: () => void;
   boxProps?: BoxProps;

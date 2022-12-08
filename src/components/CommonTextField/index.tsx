@@ -5,6 +5,7 @@ import { grey } from "@mui/material/colors";
 export const MaptyProTextField = styled(TextField)(({ theme }) => ({
   "& .MuiFormLabel-root": {
     color: grey[500],
+    fontSize: "1.4rem",
     "&.Mui-focused": {
       color: theme.palette.primary.main,
     },
