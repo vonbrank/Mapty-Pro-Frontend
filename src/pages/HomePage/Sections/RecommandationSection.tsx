@@ -46,7 +46,7 @@ const RecommendationSection = () => {
   };
 
   useEffect(() => {
-    changeRecommendJourneySeed();
+    if (recommendJourneySeed === 0) changeRecommendJourneySeed();
   }, []);
 
   useEffect(() => {

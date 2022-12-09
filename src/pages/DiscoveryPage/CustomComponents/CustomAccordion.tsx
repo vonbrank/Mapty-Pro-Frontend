@@ -16,7 +16,7 @@ import { JourneyData, UniqueJourneyData } from "../../../Redux/JourneySlice";
 import { blue } from "@mui/material/colors";
 import { JourneyWaypointList } from "./Waypoint";
 import { MaptyProButton } from "../../../components/CommonButton";
-import { useAppDispatch } from "../../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import { showTemporaryToastText } from "../../../Redux/ToastSlice";
 import { showFeatureDevelopingText } from "../../../Utils";
 
@@ -60,6 +60,9 @@ const CustomAccordion = ({
   onDelete: (journeyId: string) => void;
 }) => {
   const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector((state) => ({
+    currentUser: state.login.currentUser,
+  }));
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
   const handleConfirmDelete = () => {
     // onDelete(journeyData.journeyId);
@@ -82,14 +85,16 @@ const CustomAccordion = ({
           <Typography sx={{ fontSize: "1.8rem", fontWeight: 500 }}>
             {journeyData.title}
           </Typography>
-          <MaptyProButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setConfirmDeleteDialogOpen(true);
-            }}
-          >
-            Delete
-          </MaptyProButton>
+          {currentUser && (
+            <MaptyProButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setConfirmDeleteDialogOpen(true);
+              }}
+            >
+              Delete
+            </MaptyProButton>
+          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Container, useMediaQuery } from "@mui/material";
 import { MapDiscovery } from "../../components/LeafletMap";
-import JourneyEditor from "./JourneyEditor";
+import JourneyEditor, { JourneySidePanel } from "./JourneyEditor";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import {
   getDataFromLocalStorage,
@@ -60,7 +60,7 @@ const DiscoveryPage = () => {
         }}
       >
         <MapDiscovery />
-        <JourneyEditor />
+        <JourneySidePanel />
       </Box>
     </Container>
   );

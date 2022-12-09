@@ -190,39 +190,43 @@ const JourneyCard = ({
                 padding: "1.6rem",
               }}
             >
-              <Stack direction={"row"} spacing="1.6rem" alignItems={"center"}>
-                <Box
-                  sx={{
-                    width: "6.4rem",
-                    height: "6.4rem",
-                    padding: "1.2rem",
-                    border: "2px solid rgb(175, 175, 175)",
-                    borderRadius: "12.8rem",
-                    flexShrink: 0,
-                  }}
-                >
-                  <ProfilePhotoPlaceholder
-                    style={{ height: "100%", width: "100%" }}
-                  />
-                </Box>
-                <Stack sx={{ flexGrow: 1 }} spacing={"1.2rem"}>
-                  <Typography sx={{ fontSize: "2rem" }}>
-                    {currentUser?.username || "undefined username"}
-                  </Typography>
-                  <Box>
-                    <MaptyProTextField multiline rows={3} fullWidth />
+              {currentUser ? (
+                <Stack direction={"row"} spacing="1.6rem" alignItems={"center"}>
+                  <Box
+                    sx={{
+                      width: "6.4rem",
+                      height: "6.4rem",
+                      padding: "1.2rem",
+                      border: "2px solid rgb(175, 175, 175)",
+                      borderRadius: "12.8rem",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ProfilePhotoPlaceholder
+                      style={{ height: "100%", width: "100%" }}
+                    />
                   </Box>
-                  <Stack direction={"row"} justifyContent="flex-end">
-                    <MaptyProButton
-                      variant="contained"
-                      size="small"
-                      onClick={() => showFeatureDevelopingText(dispatch)}
-                    >
-                      Commemt
-                    </MaptyProButton>
+                  <Stack sx={{ flexGrow: 1 }} spacing={"1.2rem"}>
+                    <Typography sx={{ fontSize: "2rem" }}>
+                      {currentUser?.username || "undefined username"}
+                    </Typography>
+                    <Box>
+                      <MaptyProTextField multiline rows={3} fullWidth />
+                    </Box>
+                    <Stack direction={"row"} justifyContent="flex-end">
+                      <MaptyProButton
+                        variant="contained"
+                        size="small"
+                        onClick={() => showFeatureDevelopingText(dispatch)}
+                      >
+                        Commemt
+                      </MaptyProButton>
+                    </Stack>
                   </Stack>
                 </Stack>
-              </Stack>
+              ) : (
+                <Typography>登录以发表评论</Typography>
+              )}
             </Paper>
             {JourneyCommentExamples.map((journeyComment) => {
               return (

@@ -4,6 +4,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
+  Collapse,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { MaptyProButton } from "../../components/CommonButton";
@@ -19,6 +20,7 @@ import {
   getUserJourneyData,
   setPersonalJourney,
 } from "../../Redux/JourneySlice";
+import { TransitionGroup } from "react-transition-group";
 
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
@@ -90,19 +92,24 @@ const ProfilePage = () => {
               </MaptyProButton>
             </Stack>
             <Stack spacing="3rem" marginTop="3.6rem">
-              {jourenyList.map((journey, index) => (
-                <JourneyCard
-                  key={journey.journeyId}
-                  title={journey.title}
-                  content={journey.description}
-                  imgSrc={
-                    JourneyRecommendationList[
-                      index % JourneyRecommendationList.length
-                    ].imgSrc
-                  }
-                  waypoints={journey.waypointList}
-                />
-              ))}
+              <TransitionGroup>
+                {jourenyList.map((journey, index) => (
+                  <Collapse key={journey.journeyId}>
+                    <Box marginY="1.6rem">
+                      <JourneyCard
+                        title={journey.title}
+                        content={journey.description}
+                        imgSrc={
+                          JourneyRecommendationList[
+                            index % JourneyRecommendationList.length
+                          ].imgSrc
+                        }
+                        waypoints={journey.waypointList}
+                      />
+                    </Box>
+                  </Collapse>
+                ))}
+              </TransitionGroup>
             </Stack>
           </Box>
         </Stack>
