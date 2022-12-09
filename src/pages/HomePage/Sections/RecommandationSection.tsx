@@ -5,8 +5,10 @@ import {
   Paper,
   Stack,
   Typography,
+  CircularProgress,
+  Collapse,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { ReactComponent as RecommendationRefreshIcon } from "../assets/RecommendationRefreshIcon.svg";
 import {
@@ -15,9 +17,42 @@ import {
   JourneyRecommendationList,
 } from "../../../components/CommonCard";
 import { useIntl } from "react-intl";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
+import {
+  setRecommendJourneySeed,
+  getPublicRandomJourneyData,
+} from "../../../Redux/JourneySlice";
+import { TransitionGroup } from "react-transition-group";
 
 const RecommendationSection = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useAppDispatch();
+  const { recommendJourneyList, recommendJourneySeed } = useAppSelector(
+    (state) => ({
+      recommendJourneyList: state.journey.system.recommendJourneyList,
+      recommendJourneySeed: state.journey.system.recommendJourneySeed,
+    })
+  );
+
+  const changeRecommendJourneySeed = () => {
+    dispatch(setRecommendJourneySeed(Math.round(Math.random() * 100000000)));
+  };
+
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  const handleLoadPublicRandomJourneyData = async () => {
+    setIsLoadingData(true);
+    await dispatch(getPublicRandomJourneyData(recommendJourneySeed, 3));
+    setIsLoadingData(false);
+  };
+
+  useEffect(() => {
+    changeRecommendJourneySeed();
+  }, []);
+
+  useEffect(() => {
+    handleLoadPublicRandomJourneyData();
+  }, [recommendJourneySeed]);
+
   return (
     <Box
       sx={{
@@ -41,15 +76,34 @@ const RecommendationSection = () => {
           <Typography className="Recommendation-Section__title">
             {formatMessage({ id: "homePage.recommendation.heading" })}
           </Typography>
-          <IconButton>
-            <RecommendationRefreshIcon />
+          <IconButton onClick={changeRecommendJourneySeed}>
+            {isLoadingData ? (
+              <CircularProgress size="24px" />
+            ) : (
+              <RecommendationRefreshIcon />
+            )}
           </IconButton>
         </Stack>
-        <Stack spacing="3rem" marginTop="3.6rem">
-          {JourneyRecommendationList.map((journeyBriefInfo, index) => (
-            <JourneyCard key={index} {...journeyBriefInfo} />
-          ))}
-        </Stack>
+        <Box marginTop="3.6rem">
+          <TransitionGroup>
+            {recommendJourneyList.map((journey, index) => (
+              <Collapse key={journey.journeyId}>
+                <Box marginY="1.6rem">
+                  <JourneyCard
+                    title={journey.title}
+                    content={journey.description}
+                    imgSrc={
+                      JourneyRecommendationList[
+                        index % JourneyRecommendationList.length
+                      ].imgSrc
+                    }
+                    waypoints={journey.waypointList}
+                  />
+                </Box>
+              </Collapse>
+            ))}
+          </TransitionGroup>
+        </Box>
       </Container>
     </Box>
   );

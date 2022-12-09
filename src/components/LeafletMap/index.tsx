@@ -75,6 +75,26 @@ const LocationMarker = ({
   return <></>;
 };
 
+const MapDiscoveryOperationHook = () => {
+  const { waypointsDisplayOnMap } = useAppSelector((state) => ({
+    waypointsDisplayOnMap: state.journey.waypointsDisplayOnMap,
+  }));
+  const map = useMap();
+  useEffect(() => {
+    map.scrollWheelZoom.enable();
+  }, []);
+  useEffect(() => {
+    if (waypointsDisplayOnMap.length === 0) return;
+    let group = new L.FeatureGroup();
+    waypointsDisplayOnMap.forEach((waypoint) => {
+      L.marker([waypoint.coordinate.lat, waypoint.coordinate.lng]).addTo(group);
+    });
+    map.fitBounds(group.getBounds());
+  }, [waypointsDisplayOnMap]);
+
+  return <></>;
+};
+
 const MapDiscovery = () => {
   const { waypointsDisplayOnMap } = useAppSelector((state) => ({
     waypointsDisplayOnMap: state.journey.waypointsDisplayOnMap,
@@ -89,28 +109,6 @@ const MapDiscovery = () => {
   };
 
   const minWidth768 = useMediaQuery("(min-width:768px)");
-
-  const MapDiscoveryOperationHook = () => {
-    const { waypointsDisplayOnMap } = useAppSelector((state) => ({
-      waypointsDisplayOnMap: state.journey.waypointsDisplayOnMap,
-    }));
-    const map = useMap();
-    useEffect(() => {
-      map.scrollWheelZoom.enable();
-    }, []);
-    useEffect(() => {
-      if (waypointsDisplayOnMap.length === 0) return;
-      let group = new L.FeatureGroup();
-      waypointsDisplayOnMap.forEach((waypoint) => {
-        L.marker([waypoint.coordinate.lat, waypoint.coordinate.lng]).addTo(
-          group
-        );
-      });
-      map.fitBounds(group.getBounds());
-    }, [waypointsDisplayOnMap]);
-
-    return <></>;
-  };
 
   return (
     <Box
@@ -155,6 +153,32 @@ const MapDiscovery = () => {
   );
 };
 
+function JourneyCardMapOperationHook({
+  waypointsToDisplay,
+}: {
+  waypointsToDisplay: {
+    lat: number;
+    lng: number;
+  }[];
+}) {
+  const map = useMap();
+  useEffect(() => {
+    map.attributionControl.setPosition("bottomleft");
+    map.zoomControl.remove();
+    map.dragging.disable();
+  }, []);
+
+  if (waypointsToDisplay.length !== 0) {
+    let group = new L.FeatureGroup();
+    waypointsToDisplay.forEach((waypoint) => {
+      L.marker([waypoint.lat, waypoint.lng]).addTo(group);
+    });
+    map.fitBounds(group.getBounds(), { padding: [0.5, 0.5] });
+  }
+
+  return <></>;
+}
+
 const JourneyCardMap = ({
   waypointsToDisplay,
 }: {
@@ -163,32 +187,6 @@ const JourneyCardMap = ({
     lng?: number;
   }[];
 }) => {
-  function JourneyCardMapOperationHook({
-    waypointsToDisplay,
-  }: {
-    waypointsToDisplay: {
-      lat: number;
-      lng: number;
-    }[];
-  }) {
-    const map = useMap();
-    useEffect(() => {
-      map.attributionControl.setPosition("bottomleft");
-      map.zoomControl.remove();
-      map.dragging.disable();
-    }, []);
-
-    if (waypointsToDisplay.length !== 0) {
-      let group = new L.FeatureGroup();
-      waypointsToDisplay.forEach((waypoint) => {
-        L.marker([waypoint.lat, waypoint.lng]).addTo(group);
-      });
-      map.fitBounds(group.getBounds(), { padding: [0.5, 0.5] });
-    }
-
-    return <></>;
-  }
-
   const waypoinsToRender = waypointsToDisplay.filter(
     (waypoint) => waypoint.lat && waypoint.lng
   ) as {
