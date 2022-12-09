@@ -88,7 +88,7 @@ const AboutPage = () => {
               spacing="2.4rem"
             >
               <CustomContributorCard name="Von Brank" />
-              <CustomContributorCard name="Seatle" />
+              <CustomContributorCard name="Ponally" />
               <CustomContributorCard name="Liar" />
             </Stack>
           </Box>

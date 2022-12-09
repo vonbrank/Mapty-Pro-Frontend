@@ -151,7 +151,6 @@ export const getUserJourneyData = (accountdata: {
 }) => {
   return async (dispatch: AppDispatch) => {
     try {
-      console.log("[getUserJourneyData] current user = ", accountdata);
       const axiosRes = await Axios.get("/journey/getByUser", {
         headers: {
           username: accountdata.username,
@@ -173,7 +172,6 @@ export const getUserJourneyData = (accountdata: {
           }[];
         }[];
       } = axiosRes.data;
-      console.log("[getUserJourneyData] current user = ", res);
       if (res.code === 200 && res.data !== undefined) {
         const jourenyList = res.data;
         dispatch(

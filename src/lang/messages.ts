@@ -76,7 +76,7 @@ export const messages: {
     },
     about: {
       introduction:
-        "This project is inspired by <link>Mapty</link>, a web app created by <link>Jonas Schmedtmann</link> and used to teach how to manage a map in JavaScript. <link>Mapty Pro</link> is an all-round improvement of Mapty. To satisfy the requirement of the final assignment incourse provided by Harbin Institute of Technology: <link>[CS33461: Service-Oriented Software Systems]</link>, we developed Mapty Pro. Not only sifunction based on a publicMap API has been implemented, but also some other services aredeployed inback-end server including login, sharing and more.",
+        "This project is inspired by <link>Mapty</link>, a web app created by <link>Jonas Schmedtmann</link> and used to teach how to manage a map in JavaScript. <link>Mapty Pro</link> is an all-round improvement of Mapty. To satisfy the requirement of the final assignment in the course provided by Harbin Institute of Technology: <link>[CS33461: Service-Oriented Software Systems]</link>, we developed Mapty Pro. Not only simple function based on a public Map API has been implemented, but also some other services are deployed in our back-end server including login, sharing and more.",
       headings: {
         primary: "About Us",
         contributors: "Contributors",
@@ -112,7 +112,7 @@ export const messages: {
         syncBetweenDevices: "跨平台同步",
       },
       recommendation: {
-        heading: "推荐",
+        heading: "为您推荐",
       },
     },
     navigation: {
