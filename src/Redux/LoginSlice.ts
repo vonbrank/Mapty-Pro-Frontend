@@ -159,6 +159,119 @@ export const createAccount = (accountdata: {
   };
 };
 
+export const updateUserInfo = (
+  accountdata: {
+    username: string;
+    password: string;
+  },
+  newUserInfo: {
+    username: string;
+    email: string;
+  }
+) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const axiosRes = await Axios.post(
+        "/auth/updateUserProfile",
+        {
+          newUsername: newUserInfo.username,
+          newEmail: newUserInfo.email,
+        },
+        {
+          headers: {
+            username: accountdata.username,
+            password: accountdata.password,
+          },
+        }
+      );
+      const res: {
+        code: Number;
+        description: string;
+        timestamp: string;
+        data?: {
+          id: Number;
+          username: string;
+          password: string;
+          email: string;
+        };
+      } = axiosRes.data;
+      if (res.code === 200 && res.data !== undefined) {
+        dispatch(setCurrentUser(res.data));
+        dispatch(
+          showTemporaryToastText({
+            severity: "success",
+            message: "Update user info successfully.",
+          })
+        );
+      } else {
+        dispatch(
+          showTemporaryToastText({
+            severity: "error",
+            message: res.description,
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
+    }
+  };
+};
+
+export const resetPassword = (
+  accountdata: {
+    username: string;
+    password: string;
+  },
+  dataToPost: {
+    oldPassword: string;
+    newPassword: string;
+  }
+) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const axiosRes = await Axios.post("/auth/resetPassword", dataToPost, {
+        headers: {
+          username: accountdata.username,
+          password: accountdata.password,
+        },
+      });
+      const res: {
+        code: Number;
+        description: string;
+        timestamp: string;
+        data?: {
+          id: Number;
+          username: string;
+          password: string;
+          email: string;
+        };
+      } = axiosRes.data;
+      if (res.code === 200 && res.data !== undefined) {
+        dispatch(setCurrentUser(res.data));
+        dispatch(
+          showTemporaryToastText({
+            severity: "success",
+            message: "Reset password successfully.",
+          })
+        );
+      } else {
+        dispatch(
+          showTemporaryToastText({
+            severity: "error",
+            message: res.description,
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
+    }
+  };
+};
+
 export const {
   switchMode,
   openLoginPage,
