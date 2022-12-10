@@ -19,6 +19,8 @@ import { grey } from "@mui/material/colors";
 import { MaptyProButton } from "../../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import { setCurrentUser } from "../../../Redux/LoginSlice";
+import { useNavigate } from "react-router-dom";
+import { showTemporaryToastText } from "../../../Redux/ToastSlice";
 
 export const LanguageSwitch = ({
   handleChangeLocale = () => {},
@@ -36,6 +38,11 @@ export const LanguageSwitch = ({
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setLangListAnchorEl(event.currentTarget);
+  };
+
+  const handleChangeLocaleItemClick = (newLocale: string) => {
+    handleChangeLocale(newLocale);
+    handleLangListClose();
   };
 
   return (
@@ -61,12 +68,16 @@ export const LanguageSwitch = ({
       >
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => handleChangeLocale(LOCALES.CHINESE)}>
+            <ListItemButton
+              onClick={() => handleChangeLocaleItemClick(LOCALES.CHINESE)}
+            >
               <ListItemText primary="中文" sx={{ textAlign: "center" }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => handleChangeLocale(LOCALES.ENGLISH)}>
+            <ListItemButton
+              onClick={() => handleChangeLocaleItemClick(LOCALES.ENGLISH)}
+            >
               <ListItemText primary="English" sx={{ textAlign: "center" }} />
             </ListItemButton>
           </ListItem>
@@ -95,6 +106,7 @@ export const ProfileDetail = () => {
   }));
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -143,7 +155,14 @@ export const ProfileDetail = () => {
             <MaptyProButton
               fullWidth
               onClick={() => {
+                navigate("/");
                 dispatch(setCurrentUser(undefined));
+                dispatch(
+                  showTemporaryToastText({
+                    severity: "info",
+                    message: "You have been logged out.",
+                  })
+                );
               }}
             >
               Logout

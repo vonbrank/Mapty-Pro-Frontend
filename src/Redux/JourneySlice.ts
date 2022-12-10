@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import {
+  journeyListToUniqueJourneyDataList,
+  showFeatureDevelopingText,
+} from "../Utils";
 import Axios from "../Utils/Axios";
 import { AppDispatch } from "./store";
+import { showTemporaryToastText } from "./ToastSlice";
 
 export interface JourneyData {
   title: string;
@@ -33,6 +38,10 @@ interface JourneyState {
   personnal: {
     jourenyList: UniqueJourneyData[];
   };
+  system: {
+    recommendJourneySeed: number;
+    recommendJourneyList: UniqueJourneyData[];
+  };
   newSelectCoordinate?: {
     lng: number;
     lat: number;
@@ -50,6 +59,10 @@ interface JourneyState {
 const initialState: JourneyState = {
   personnal: {
     jourenyList: [],
+  },
+  system: {
+    recommendJourneySeed: 0,
+    recommendJourneyList: [],
   },
   waypointsDisplayOnMap: [],
 };
@@ -105,17 +118,18 @@ export const journeySlice = createSlice({
         },
         ...state.personnal.jourenyList,
       ];
-      localStorage.setItem(
-        "personalJourneyList",
-        JSON.stringify(state.personnal.jourenyList)
-      );
     },
     setPersonalJourney: (state, action: PayloadAction<UniqueJourneyData[]>) => {
       state.personnal.jourenyList = action.payload;
-      localStorage.setItem(
-        "personalJourneyList",
-        JSON.stringify(state.personnal.jourenyList)
-      );
+    },
+    setRecommendJourney: (
+      state,
+      action: PayloadAction<UniqueJourneyData[]>
+    ) => {
+      state.system.recommendJourneyList = action.payload;
+    },
+    setRecommendJourneySeed: (state, action: PayloadAction<number>) => {
+      state.system.recommendJourneySeed = action.payload;
     },
     getDataFromLocalStorage: (state) => {
       const personalJourneyListJson = localStorage.getItem(
@@ -173,32 +187,14 @@ export const getUserJourneyData = (accountdata: {
       if (res.code === 200 && res.data !== undefined) {
         const jourenyList = res.data;
         dispatch(
-          setPersonalJourney(
-            jourenyList.map((jouorney) => {
-              return {
-                journeyId: `${jouorney.id}`,
-                title: jouorney.title,
-                description: jouorney.description,
-                waypointList: jouorney.waypoints.map((waypoint) => {
-                  return {
-                    label: waypoint.label,
-                    time: waypoint.time,
-                    coordinate: {
-                      lat: +waypoint.coordinate
-                        .substring(1, waypoint.coordinate.length - 1)
-                        .split(", ")[0],
-                      lng: +waypoint.coordinate
-                        .substring(1, waypoint.coordinate.length - 1)
-                        .split(", ")[1],
-                    },
-                  };
-                }),
-              };
-            })
-          )
+          setPersonalJourney(journeyListToUniqueJourneyDataList(jourenyList))
         );
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
+    }
   };
 };
 
@@ -248,7 +244,52 @@ export const createNewJourney = (
       if (res.code === 200) {
         dispatch(getUserJourneyData(accountdata));
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
+    }
+  };
+};
+
+export const getPublicRandomJourneyData = (
+  randomSeed: number,
+  count: number
+) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const axiosRes = await Axios.get("/journey/getBySeed", {
+        params: {
+          seed: randomSeed,
+          count: count,
+        },
+      });
+      const res: {
+        code: Number;
+        description: string;
+        timestamp: string;
+        data?: {
+          id: Number;
+          title: string;
+          description: string;
+          waypoints: {
+            label: string;
+            time: string;
+            coordinate: string;
+          }[];
+        }[];
+      } = axiosRes.data;
+      if (res.code === 200 && res.data !== undefined) {
+        const jourenyList = res.data;
+        dispatch(
+          setRecommendJourney(journeyListToUniqueJourneyDataList(jourenyList))
+        );
+      }
+    } catch (error) {
+      dispatch(
+        showTemporaryToastText({ severity: "error", message: `${error}` })
+      );
+    }
   };
 };
 
@@ -259,6 +300,8 @@ export const {
   getDataFromLocalStorage,
   removePersonalJourney,
   setPersonalJourney,
+  setRecommendJourney,
+  setRecommendJourneySeed,
 } = journeySlice.actions;
 
 export default journeySlice.reducer;

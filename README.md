@@ -1,46 +1,61 @@
-# Getting Started with Create React App
+# [Mapty Pro (Front-end)](https://github.com/vonbrank/Mapty-Pro-Frontend) 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+使用 React 构建的 Web 前端地图应用。
 
-## Available Scripts
+![zWIb38.png](https://s1.ax1x.com/2022/12/10/zWIb38.png)
 
-In the project directory, you can run:
+## 使用
 
-### `npm start`
++ 安装依赖项
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  ```bash
+  npm install
+  # or 
+  yarn install
+  ```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
++ 配置 Restful API URL
 
-### `npm test`
+  在 `src\config\SERVICE_BASE_API_URLS.ts` 中修改 `SERVICE_BASE_API_URLS` 项，根据项目运行时的浏览器 `URL` 选择对应的后端环境，此处给出一个示例：
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  ```typescript
+  const SERVICE_BASE_API_URLS: {
+    [index: string]: string;
+  } = {
+    localhost: "http://localhost:5000/api",
+    "maptypro.vonbrank.com": "https://maptypro-api.vonbrank.com",
+  };
+  
+  export const getServiceBaseURL: () => string = () => {
+    const hostname = window.location.hostname;
+    const baseURL = SERVICE_BASE_API_URLS[hostname];
+  
+    return baseURL || "http://localhost:5000/api";
+  };
+  
+  export {};
+  ```
 
-### `npm run build`
++ 启动开发服务器
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  ```bash
+  npm run start
+  # or 
+  yarn start
+  ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
++ 构建项目
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  ```bash
+  npm run build
+  # or 
+  yarn build
+  ```
 
-### `npm run eject`
+## 更多内容
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+前端项目：https://github.com/vonbrank/Mapty-Pro-Frontend
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+后端项目：https://github.com/vonbrank/Mapty-Pro-Backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Restful API 规约：[Mapty Pro Restful API Specification](https://github.com/vonbrank/Mapty-Pro/blob/main/docs/Restful-API-Specification.md)

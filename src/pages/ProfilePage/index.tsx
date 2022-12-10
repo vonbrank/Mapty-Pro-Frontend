@@ -4,6 +4,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
+  Collapse,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { MaptyProButton } from "../../components/CommonButton";
@@ -13,23 +14,38 @@ import {
   JourneyCard,
   JourneyRecommendationList,
 } from "../../components/CommonCard";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { useNavigate } from "react-router-dom";
+import {
+  getUserJourneyData,
+  setPersonalJourney,
+} from "../../Redux/JourneySlice";
+import { TransitionGroup } from "react-transition-group";
 
 const ProfilePage = () => {
   const minWidth900 = useMediaQuery("(min-width:900px)");
 
-  const { currentUser } = useAppSelector((state) => ({
+  const { currentUser, jourenyList } = useAppSelector((state) => ({
     currentUser: state.login.currentUser,
+    jourenyList: state.journey.personnal.jourenyList,
   }));
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentUser === undefined) {
+    if (currentUser == undefined) {
+      dispatch(setPersonalJourney([]));
       navigate("/");
+    } else {
+      dispatch(
+        getUserJourneyData({
+          username: currentUser.username,
+          password: currentUser.password,
+        })
+      );
     }
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
   return (
     <Box
@@ -76,9 +92,24 @@ const ProfilePage = () => {
               </MaptyProButton>
             </Stack>
             <Stack spacing="3rem" marginTop="3.6rem">
-              {JourneyRecommendationList.map((journeyBriefInfo, index) => (
-                <JourneyCard key={index} {...journeyBriefInfo} />
-              ))}
+              <TransitionGroup>
+                {jourenyList.map((journey, index) => (
+                  <Collapse key={journey.journeyId}>
+                    <Box marginY="1.6rem">
+                      <JourneyCard
+                        title={journey.title}
+                        content={journey.description}
+                        imgSrc={
+                          JourneyRecommendationList[
+                            index % JourneyRecommendationList.length
+                          ].imgSrc
+                        }
+                        waypoints={journey.waypointList}
+                      />
+                    </Box>
+                  </Collapse>
+                ))}
+              </TransitionGroup>
             </Stack>
           </Box>
         </Stack>

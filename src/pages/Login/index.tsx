@@ -16,6 +16,7 @@ import MaptyIcon from "../../assets/mapty-icon.png";
 import { CreateAccountForm, LoginForm } from "./CustomComponents/CustomForm";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
+import SwipeableViews from "react-swipeable-views";
 
 const Login = () => {
   const loginTabProps = (index: number) => {
@@ -40,12 +41,13 @@ const Login = () => {
   const tabsContent = [<LoginForm />, <CreateAccountForm />];
 
   const minWidth768 = useMediaQuery("(min-width:768px)");
+  const minWidth425 = useMediaQuery("(min-width:425px)");
 
   return (
     <Box
       sx={{
         position: "fixed",
-        zIndex: 1500,
+        zIndex: 1301,
         width: "100%",
         height: "100vh",
         overflowY: "overlay",
@@ -67,7 +69,7 @@ const Login = () => {
               minHeight: "100vh",
               paddingY: "12.8rem",
               // paddingLeft: "12.8rem",
-              paddingX: "12.8rem",
+              paddingX: minWidth425 ? "12.8rem" : "6.4rem",
               width: minWidth768 ? "60vw" : "100vw",
               transform: minWidth768 ? "translateX(40vw)" : "",
               backgroundColor: "#fff",
@@ -75,7 +77,8 @@ const Login = () => {
               boxShadow: "-4px 0px 4px rgba(0, 0, 0, 0.25)",
             },
             "&__form-box": {
-              width: "72rem",
+              // width: "72rem",
+              width: "100%",
             },
             "&__close-button": {
               position: "absolute",
@@ -139,7 +142,16 @@ const Login = () => {
                 onClick={() => dispatch(switchMode(1))}
               />
             </Tabs>
-            {tabsContent[loginPageMode.index]}
+            <Box marginTop="7.2rem">
+              <SwipeableViews
+                index={loginPageMode.index}
+                onChangeIndex={(newIndex) => dispatch(switchMode(newIndex))}
+                animateHeight
+              >
+                <LoginForm />
+                <CreateAccountForm />
+              </SwipeableViews>
+            </Box>
           </Box>
         </Stack>
         <IconButton

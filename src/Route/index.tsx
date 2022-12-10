@@ -6,6 +6,8 @@ import App from "../App";
 import Login from "../pages/Login";
 import DiscoveryPage from "../pages/DiscoveryPage";
 import AboutPage from "../pages/AboutPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import TestPage from "../pages/TestPage";
 
 const customRouter = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ const customRouter = createBrowserRouter([
         element: <AboutPage />,
       },
     ],
+  },
+  {
+    path: "test",
+    element: <TestPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 

@@ -12,7 +12,7 @@ import MaptyIcon from "../../assets/mapty-icon.png";
 import { MaptyProButton } from "../CommonButton";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { navigateTo, setTabVisible } from "../../Redux/NavigationSlice";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { openLoginPage, switchMode } from "../../Redux/LoginSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import ListIcon from "@mui/icons-material/List";
@@ -20,6 +20,7 @@ import { useIntl } from "react-intl";
 import { CustomNavigationTab } from "./CustomComponents/CustomTab";
 import { CustomLoginButtonGroup } from "./CustomComponents/CustomButtonGroup";
 import { LanguageSwitch, ProfileDetail } from "./CustomComponents/CustomPanel";
+import { grey } from "@mui/material/colors";
 
 const NavigationHeader = ({
   handleChangeLocale = () => {},
@@ -52,15 +53,7 @@ const NavigationHeader = ({
   const minWidth900 = useMediaQuery("(min-width:900px)");
 
   const intl = useIntl();
-
-  useEffect(() => {
-    dispatch(
-      setTabVisible({
-        label: "navigation.profile",
-        newValue: currentUser !== undefined,
-      })
-    );
-  }, [currentUser]);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -74,32 +67,38 @@ const NavigationHeader = ({
               height: "8rem",
             }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing="1.2rem"
-              sx={{
-                "& .navigator-logo": {
-                  "&__icon": {
-                    height: "3.6rem",
-                    width: "3.6rem",
-                  },
-                  "&__text": {
-                    fontSize: "2.4rem",
-                    fontWeight: "600",
-                  },
-                },
-              }}
+            <MaptyProButton
+              sx={{ padding: 0, color: grey[800] }}
+              onClick={() => navigate("/")}
             >
-              <img
-                src={MaptyIcon}
-                alt="Mapty Icon"
-                className="navigator-logo__icon"
-              />
-              <Typography className="navigator-logo__text">
-                Mapty Pro
-              </Typography>
-            </Stack>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing="1.2rem"
+                sx={{
+                  "& .navigator-logo": {
+                    "&__icon": {
+                      height: "3.6rem",
+                      width: "3.6rem",
+                    },
+                    "&__text": {
+                      fontSize: "2.4rem",
+                      fontWeight: "600",
+                    },
+                  },
+                  cursor: "pointer",
+                }}
+              >
+                <img
+                  src={MaptyIcon}
+                  alt="Mapty Icon"
+                  className="navigator-logo__icon"
+                />
+                <Typography className="navigator-logo__text">
+                  Mapty Pro
+                </Typography>
+              </Stack>
+            </MaptyProButton>
             <Stack
               direction="row"
               sx={{

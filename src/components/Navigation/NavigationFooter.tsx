@@ -10,7 +10,7 @@ import { useIntl } from "react-intl";
 const NavigationFooter = () => {
   const dispatch = useAppDispatch();
   const linkInfoList = useAppSelector((state) => state.navigation.linkInfoList);
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
 
   return (
     <Paper elevation={2} sx={{ paddingY: "1.2rem", zIndex: 1300 }}>
@@ -28,7 +28,7 @@ const NavigationFooter = () => {
                 display: linkInfo.visible ? "inline" : "none",
               }}
             >
-              {intl.messages[linkInfo.label] as string}
+              {formatMessage({ id: linkInfo.label })}
             </CustomFooterLink>
           ))}
         </Stack>
@@ -43,8 +43,7 @@ const NavigationFooter = () => {
         >
           <Typography>© Copyright 2022</Typography>
           <Typography sx={{ textAlign: "center" }}>
-            Use for the software engineering course in Harbin Institute of
-            Technology
+            {formatMessage({ id: "copyright.message" })}
           </Typography>
         </Stack>
       </Container>

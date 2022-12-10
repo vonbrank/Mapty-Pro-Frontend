@@ -7,6 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React from "react";
+import { useIntl } from "react-intl";
 import { MaptyProButton } from "../../../components/CommonButton";
 import { MapExample } from "../../../components/LeafletMap";
 
@@ -17,23 +18,24 @@ interface FeatureContent {
 
 const FeatureList: FeatureContent[] = [
   {
-    title: "Recording your trails",
+    title: "homePage.features.recordingYourTails",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse egestas turpis et mi mollis malesuada. Quisque sed eleifend mauris. Aenean nec fermentum risus. ",
   },
   {
-    title: "Share to others",
+    title: "homePage.features.shareToOthers",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse egestas turpis et mi mollis malesuada. Quisque sed eleifend mauris. Aenean nec fermentum risus. ",
   },
   {
-    title: "Synchronize between devices",
+    title: "homePage.features.syncBetweenDevices",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse egestas turpis et mi mollis malesuada. Quisque sed eleifend mauris. Aenean nec fermentum risus. ",
   },
 ];
 
 const Feature = ({ title, content }: FeatureContent) => {
+  const { formatMessage } = useIntl();
   return (
     <Stack
       spacing="1.6rem"
@@ -66,7 +68,9 @@ const Feature = ({ title, content }: FeatureContent) => {
         },
       }}
     >
-      <Typography className="Feature__title">{title}</Typography>
+      <Typography className="Feature__title">
+        {formatMessage({ id: title })}
+      </Typography>
       <Typography className="Feature_content">{content}</Typography>
     </Stack>
   );

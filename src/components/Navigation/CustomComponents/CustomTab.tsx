@@ -1,8 +1,9 @@
-import React from "react";
-import { useAppSelector } from "../../../Redux/hooks";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import { Tabs, TabsProps, Tab } from "@mui/material";
 import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
+import { setTabVisible } from "../../../Redux/NavigationSlice";
 
 const navigationTabProps = (index: number) => {
   return {
@@ -23,22 +24,36 @@ export const CustomNavigationTab = (tabsProps: TabsProps) => {
 
   const intl = useIntl();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setTabVisible({
+        label: "navigation.profile",
+        newValue: currentUser !== undefined,
+      })
+    );
+  }, [currentUser]);
 
   return (
-    <Tabs value={activeIndex} aria-label="Mapty-Pro-Navigation" {...tabsProps}>
-      {linkInfoList.map((linkInfo, index) => (
-        <Tab
-          label={intl.messages[linkInfo.label] as string}
-          key={linkInfo.label}
-          {...navigationTabProps(index)}
-          onClick={(e) => {
-            navigate(linkInfo.path);
-          }}
-          sx={{
-            display: linkInfo.visible ? "inline" : "none",
-          }}
-        />
-      ))}
+    <Tabs
+      value={linkInfoList[activeIndex].path}
+      aria-label="Mapty-Pro-Navigation"
+      {...tabsProps}
+    >
+      {linkInfoList
+        .filter((linkInfo) => linkInfo.visible)
+        .map((linkInfo, index) => (
+          <Tab
+            label={intl.messages[linkInfo.label] as string}
+            value={linkInfo.path}
+            key={linkInfo.label}
+            {...navigationTabProps(index)}
+            onClick={(e) => {
+              navigate(linkInfo.path);
+            }}
+          />
+        ))}
     </Tabs>
   );
 };
